@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -8,11 +9,14 @@ using Owin;
 using WebApplication5.Models;
 using Microsoft.Owin.Security.Facebook;
 using System.Threading.Tasks;
+using System.Net.Http;
 
 namespace WebApplication5
 {
     public partial class Startup
     {
+        const string XmlSchemaString = "http://www.w3.org/2001/XMLSchema#string";
+
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
@@ -51,17 +55,9 @@ namespace WebApplication5
             {
                 AppId = "517975801705838",
                 AppSecret = "032717785512919f1c5620ddab987a16",
-                SignInAsAuthenticationType = "External",
-                Provider = new FacebookAuthenticationProvider()
-                {
-                    OnAuthenticated = (context) =>
-                        {
-                            // All data from facebook in this object. 
-                            var rawUserObjectFromFacebookAsJson = context.User;
-
-                            return Task.FromResult(0);
-                        }
-                }
+                BackchannelHttpHandler = new FacebookBackChannelHandler(),
+                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,name,email"
+                
             };
 
             //Way to specify additional scopes
@@ -74,6 +70,20 @@ namespace WebApplication5
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+        }
+    }
+
+    public class FacebookBackChannelHandler : HttpClientHandler
+    {
+        protected override async System.Threading.Tasks.Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
+        {
+            // Replace the RequestUri so it's not malformed
+            if (!request.RequestUri.AbsolutePath.Contains("/oauth"))
+            {
+                request.RequestUri = new Uri(request.RequestUri.AbsoluteUri.Replace("?access_token", "&access_token"));
+            }
+
+            return await base.SendAsync(request, cancellationToken);
         }
     }
 }
