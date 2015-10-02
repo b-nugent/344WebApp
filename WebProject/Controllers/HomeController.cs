@@ -23,7 +23,7 @@ namespace WebApplication5.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Meet the Team";
 
             return View();
         }
@@ -35,11 +35,18 @@ namespace WebApplication5.Controllers
 
             return View();
         }
+<<<<<<< HEAD
         
         public ActionResult Stock()
         {
             // This is a message that can be called on the Stock's page.
             ViewBag.Message = "Stock";
+=======
+
+        public ActionResult Stocks()
+        {
+            ViewBag.Message = "My Stocks";
+>>>>>>> origin/master
 
             return View();
         }
