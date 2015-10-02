@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "Stock";
+}
+
+@{
+    var stockHandler = new StockInfo.StockHandler();
+}
+
+@section JavaScript{
+    <script src='/Scripts/jquery.min.js'></script>
+    <script>
+        var tickerSymbol = JSON.stringify(document.querySelector("#stockTicker").value);
+        jQuery.ajax({
+            type: 'POST',
+            url: 'StockController.cs/getInfo',
+            data: { ticker: tickerSymbol },
+            dataType: "json",
+            success:
+        function (data) {
+            
+            //stockHandler.getInfo(data);
+        }
+        });
+    </script>
+}
+
+<h1>Stock Search</h1>
+
+<div class="stockSearch">
+<button type="button" id="search">Search</button>
+<input id="stockTicker" type="text" size="20" maxlength"4" placeholder"Stock Ticker"/>
+</div>
