@@ -2,9 +2,32 @@
     ViewBag.Title = "Calendar";
 }
 
+
+@section JavaScript{
+    <link rel='stylesheet' href='/Content/fullcalendar.min.css' />
+    <script src='/Scripts/jquery.min.js'></script>
+    <script src='/Scripts/moment.min.js'></script>
+    <script src='/Scripts/fullcalendar.js'></script>
+    <script>
+        $(document).ready(function () {
+
+            // page is now ready, initialize the calendar...
+
+            $('#calendar').fullCalendar({
+                // put your options and callbacks here
+            })
+        });
+    </script>
+}
+
+
+
 <h2>This is my Calendar!!!!</h2>
 <h3>@ViewBag.Message</h3>
 
 <p>Hello from our View Template!</p>
+
+<div id='calendar'></div>
+
 
 
