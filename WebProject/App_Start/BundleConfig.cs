@@ -26,6 +26,15 @@ namespace WebApplication5
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));
+
+            // FullCalendar Script and Style bundles
+            bundles.Add(new StyleBundle("~/Content/fullcalendarcss").Include(
+                     "~/Content/fullcalendar.min.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/fullcalendarjs").Include(
+                      "~/Scripts/jquery.min.js",
+                      "~/Scripts/moment.min.js",
+                      "~/Scripts/fullcalendar.min.js"));
         }
     }
 }

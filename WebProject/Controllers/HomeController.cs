@@ -23,13 +23,30 @@ namespace WebApplication5.Controllers
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Meet the Team";
 
             return View();
         }
+        
         // The link to the calendar page.
         public ActionResult Calendar() {
-            ViewBag.Message = "Your calendar page.";
+            // This is a message that can be called on the Calendar's page.
+            ViewBag.Message = "Calendar";
+
+            return View();
+        }
+<<<<<<< HEAD
+        
+        public ActionResult Stock()
+        {
+            // This is a message that can be called on the Stock's page.
+            ViewBag.Message = "Stock";
+=======
+
+        public ActionResult Stocks()
+        {
+            ViewBag.Message = "My Stocks";
+>>>>>>> origin/master
 
             return View();
         }
