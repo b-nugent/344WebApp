@@ -8,6 +8,10 @@ namespace WebApplication5.Models
         [Required]
         [Display(Name = "Email")]
         public string Email { get; set; }
+
+        [Required]
+        [Display(Name = "Name")]
+        public string Name { get; set; }
     }
 
     public class ExternalLoginListViewModel

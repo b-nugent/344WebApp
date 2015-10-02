@@ -327,6 +327,7 @@ namespace WebApplication5.Controllers
             {
                 return RedirectToAction("Login");
             }
+            //return RedirectToLocal(returnUrl);
 
             // Sign in the user with this external login provider if the user already has a login
             var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
@@ -343,7 +344,20 @@ namespace WebApplication5.Controllers
                     // If the user does not have an account, then prompt the user to create an account
                     ViewBag.ReturnUrl = returnUrl;
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
-                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
+                    ExternalLoginConfirmationViewModel model = new ExternalLoginConfirmationViewModel { Name = loginInfo.ExternalIdentity.Name, Email = loginInfo.Email };
+                    var user = new ApplicationUser { UserName = model.Name, Email = model.Email };
+                    var newAccResult = await UserManager.CreateAsync(user);
+                    if (newAccResult.Succeeded)
+                    {
+                        newAccResult = await UserManager.AddLoginAsync(user.Id, loginInfo.Login);
+                        if (newAccResult.Succeeded)
+                        {
+                            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                            return RedirectToLocal(returnUrl);
+                        }
+                    }
+                    AddErrors(newAccResult);
+                    return RedirectToAction("ExternalLoginFailure", "Account");
             }
         }
 
@@ -392,7 +406,7 @@ namespace WebApplication5.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         //
