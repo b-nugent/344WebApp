@@ -2,31 +2,32 @@
     ViewBag.Title = "Calendar";
 }
 
-
 @section JavaScript{
     <link rel='stylesheet' href='/Content/fullcalendar.min.css' />
     <script src='/Scripts/jquery.min.js'></script>
     <script src='/Scripts/moment.min.js'></script>
     <script src='/Scripts/fullcalendar.js'></script>
     <script>
+        // Only load the calendar when the page is done loading everything else.
         $(document).ready(function () {
-
-            // page is now ready, initialize the calendar...
-
+            // Targets the calendar div and will put the calendar and all of its functionality there.
             $('#calendar').fullCalendar({
-                // put your options and callbacks here
             })
         });
     </script>
 }
 
+<style>
+    h1 {
+        text-align: center;
+    }
+</style>
 
 
-<h2>This is my Calendar!!!!</h2>
-<h3>@ViewBag.Message</h3>
+<!-- Displays the message from the Home Controller -->
+<h1>@ViewBag.Message</h1>
 
-<p>Hello from our View Template!</p>
-
+<!-- This is where the calendar will be displayed -->
 <div id='calendar'></div>
 
 

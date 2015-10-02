@@ -27,9 +27,11 @@ namespace WebApplication5.Controllers
 
             return View();
         }
+        
         // The link to the calendar page.
         public ActionResult Calendar() {
-            ViewBag.Message = "Your calendar page.";
+            // This is a message that can be called on the Calendar's page.
+            ViewBag.Message = "Calendar";
 
             return View();
         }
