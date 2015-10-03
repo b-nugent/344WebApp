@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using WebApplication5.CustomAttributes;
 
 namespace WebApplication5.Controllers
 {
+    [LogInAttribute]
     [RequireHttps]
     public class HomeController : Controller
     {
@@ -35,19 +37,11 @@ namespace WebApplication5.Controllers
 
             return View();
         }
-<<<<<<< HEAD
-        
-        public ActionResult Stock()
-        {
-            // This is a message that can be called on the Stock's page.
-            ViewBag.Message = "Stock";
-=======
 
         public ActionResult Stocks()
         {
+            // This is a message that can be called on the Stock's page.
             ViewBag.Message = "My Stocks";
->>>>>>> origin/master
-
             return View();
         }
     }
