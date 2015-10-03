@@ -7,27 +7,23 @@ using System.Web.Mvc;
 namespace WebApplication5.Controllers
 {
     [RequireHttps]
-    public class HomeController : Controller
-    {
-        public ActionResult Index()
-        {
+    public class HomeController : Controller {
+        public ActionResult Index() {
             return View();
         }
 
-        public ActionResult About()
-        {
+        public ActionResult About() {
             ViewBag.Message = "Your application description page.";
 
             return View();
         }
 
-        public ActionResult Contact()
-        {
+        public ActionResult Contact() {
             ViewBag.Message = "Meet the Team";
 
             return View();
         }
-        
+
         // The link to the calendar page.
         public ActionResult Calendar() {
             // This is a message that can be called on the Calendar's page.
@@ -35,20 +31,13 @@ namespace WebApplication5.Controllers
 
             return View();
         }
-<<<<<<< HEAD
-        
-        public ActionResult Stock()
-        {
+
+        public ActionResult Stock() {
             // This is a message that can be called on the Stock's page.
             ViewBag.Message = "Stock";
-=======
-
-        public ActionResult Stocks()
-        {
-            ViewBag.Message = "My Stocks";
->>>>>>> origin/master
 
             return View();
         }
     }
+
 }
