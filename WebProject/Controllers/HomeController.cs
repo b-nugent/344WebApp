@@ -38,6 +38,14 @@ namespace WebApplication5.Controllers
 
             return View();
         }
+
+        public ActionResult IndividualStock()
+        {
+            // This is a message that can be called on the Stock's page.
+            ViewBag.Message = "IndividualStock";
+
+            return View();
+        }
     }
 
 }
