@@ -6,7 +6,9 @@
     <title>@ViewBag.Title - 344 Project</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    @Scripts.Render("~/bundles/jQuery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
     @RenderSection("JavaScript", required: false)
 
 </head>
@@ -43,8 +45,6 @@
     </div>
 
 
-    @Scripts.Render("~/bundles/jQuery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+
 </body>
 </html>
