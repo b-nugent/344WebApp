@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Facebook;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication5.CustomAttributes;
+using WebApplication5.Models;
 
 namespace WebApplication5.Controllers
 {
@@ -11,7 +13,33 @@ namespace WebApplication5.Controllers
     [RequireHttps]
     public class HomeController : Controller {
         public ActionResult Index() {
-            return View();
+            UserPostsModels model = new UserPostsModels();
+            var client = new FacebookClient(Session["access_token"].ToString());
+            dynamic fbresult = client.Get("/" + Session["uid"].ToString() + "/feed?fields=from,created_time,type,message");
+            IList<UserPost> posts = new List<UserPost>();
+            foreach (var res in fbresult)
+            {
+                if (res.Value != null)
+                {
+                    foreach (var value in res.Value)
+                    {
+                        if ((value.Key != "previous" && value.Key != "next"))
+                        {
+                            if (value["type"] == "status" && value["from"]["id"] == Session["uid"].ToString())
+                            {
+                                UserPost aPost = new UserPost();
+                                aPost.type = value["type"];
+                                aPost.createdTime = value["created_time"];
+                                aPost.message = value["message"];
+                                posts.Add(aPost);
+                            }
+                        }
+                    }
+                }
+            }
+            model.posts = posts;
+
+            return View(model);
         }
 
         public ActionResult About() {
