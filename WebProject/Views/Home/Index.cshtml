@@ -18,6 +18,28 @@
     </div>
 
     <div class="col-md-6">
+        <h2>Update Facebook Status</h2>
+        @using (Html.BeginForm("UpdateStatus", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+        {
+            <div class="form-group">
+                @Html.TextArea("status", new { @class = "form-control col-md-12", rows = 3, cols = 80})
+            </div>
+            
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Update" />
+            </div>
+            
+        }
+    </div>
+    
+</div>
+
+<div class="row">
+    <div class="dailyEvents col-md-6">
+        <h2>Today's Events</h2>
+    </div>
+
+    <div class="col-md-6">
         <h2>Recent Facebook Posts</h2>
         @foreach (var post in Model.posts)
         {
@@ -36,10 +58,6 @@
             </div>
         }
     </div>
-</div>
-
-<div class="dailyEvents col-md-12">
-    <h2>Today's Events</h2>
 </div>
 
 <script type='text/javascript'>

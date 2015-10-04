@@ -79,6 +79,7 @@ namespace WebApplication5
             //Way to specify additional scopes
             facebookOptions.Scope.Add("email");
             facebookOptions.Scope.Add("user_posts");
+            facebookOptions.Scope.Add("publish_actions");
 
             app.UseFacebookAuthentication(facebookOptions);
 

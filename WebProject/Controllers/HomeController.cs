@@ -15,29 +15,33 @@ namespace WebApplication5.Controllers
         public ActionResult Index() {
             UserPostsModels model = new UserPostsModels();
             var client = new FacebookClient(Session["access_token"].ToString());
-            dynamic fbresult = client.Get("/" + Session["uid"].ToString() + "/feed?fields=from,created_time,type,message");
-            IList<UserPost> posts = new List<UserPost>();
-            foreach (var res in fbresult)
+            try
             {
-                if (res.Value != null)
+                dynamic fbresult = client.Get("/" + Session["uid"].ToString() + "/feed?fields=from,created_time,type,message");
+                IList<UserPost> posts = new List<UserPost>();
+                foreach (var res in fbresult)
                 {
-                    foreach (var value in res.Value)
+                    if (res.Value != null)
                     {
-                        if ((value.Key != "previous" && value.Key != "next"))
+                        foreach (var value in res.Value)
                         {
-                            if (value["type"] == "status" && value["from"]["id"] == Session["uid"].ToString())
+                            if ((value.Key != "previous" && value.Key != "next"))
                             {
-                                UserPost aPost = new UserPost();
-                                aPost.type = value["type"];
-                                aPost.createdTime = value["created_time"];
-                                aPost.message = value["message"];
-                                posts.Add(aPost);
+                                if (value["type"] == "status" && value["from"]["id"] == Session["uid"].ToString())
+                                {
+                                    UserPost aPost = new UserPost();
+                                    aPost.type = value["type"];
+                                    aPost.createdTime = value["created_time"];
+                                    aPost.message = value["message"];
+                                    posts.Add(aPost);
+                                }
                             }
                         }
                     }
                 }
+                model.posts = posts;
             }
-            model.posts = posts;
+            catch (FacebookOAuthException e) { }
 
             return View(model);
         }
@@ -67,6 +71,29 @@ namespace WebApplication5.Controllers
             ViewBag.Message = "Stock";
             return View();
         }
+
+        public ActionResult UpdateStatus(string status)
+        {
+            if (status == "")
+            {
+                return RedirectToAction("Index");
+            }
+
+            var client = new FacebookClient(Session["access_token"].ToString());
+            var args = new Dictionary<string, object>();
+            args["message"] = status;
+            try
+            {
+                dynamic fbresult = client.Post("/" + Session["uid"].ToString() + "/feed", args);
+            }
+            catch (FacebookOAuthException e)
+            {
+                return View("Error");
+            }
+
+            return RedirectToAction("Index");
+        }
+
     }
 
 }
