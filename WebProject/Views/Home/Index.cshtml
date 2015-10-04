@@ -2,30 +2,35 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+@section JavaScript{
+    <script src='/Scripts/jquery.min.js'></script>
+}
+<style type='text/css'>  
+      #topstocks{ width: 40%; border: 1px solid gray; padding: 5px; height: auto; overflow: auto; }
+    </style>
+
+<div class="stockcontainer">
+    <h2>Top 5 Stocks</h2>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+<div class="topstocks" id="topstocks">
 </div>
+
+<div class="dailyEvents">
+    <h2>Today's Events</h2>
+</div>
+
+<script type='text/javascript'>
+    function cback(o){   
+        var items = o.query.results.quote;
+        var output = '';
+        var num_items = o.query.count;
+        for(var i = 0; i<num_items; i++){
+            output += '<h5>' + items[i].symbol + ' ' + items[i].Name + ' ' + items[i].LastTradePriceOnly + ' ' + items[i].Change + '%' + '</h5>';
+        }
+        document.getElementById('topstocks').innerHTML = output;
+    }
+</script>
+
+<script src='https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22YHOO%22%2C%20%22MSFT%22%2C%20%22GOOG%22%2C%20%22AAPL%22%2C%20%22XOM%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=cback'></script>
+    
