@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WebApplication5.Models;
+using System.Collections.Generic;
 
 namespace WebApplication5.Controllers
 {
@@ -334,6 +335,8 @@ namespace WebApplication5.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    Session["uid"] = loginInfo.ExternalIdentity.FindAll("urn:facebook:id").First().Value;
+                    Session["access_token"] = loginInfo.ExternalIdentity.FindAll("FacebookAccessToken").First().Value;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
