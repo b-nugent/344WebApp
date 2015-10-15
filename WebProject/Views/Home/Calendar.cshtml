@@ -3,19 +3,11 @@
 }
 
 @section JavaScript{
-    <link rel='stylesheet' href='/Content/fullcalendar.min.css' />
+    @Styles.Render("~/Content/fullcalendarcss")
 
-    <script src='/Scripts/moment.min.js'></script>
-    <script src='/Scripts/fullcalendar.js'></script>
-    <script>
-        // Only load the calendar when the page is done loading everything else.
-        $(document).ready(function () {
-            // Targets the calendar div and will put the calendar and all of its functionality there.
-            $('#calendar').fullCalendar({
-            })
-        });
-    </script>
+
 }
+
 
 <style>
     h1 {
@@ -23,6 +15,15 @@
     }
 </style>
 
+
+<script>
+    // Only load the calendar when the page is done loading everything else.
+    $(document).ready(function () {
+        // Targets the calendar div and will put the calendar and all of its functionality there.
+        $('#calendar').fullCalendar({
+        })
+    });
+</script>
 
 <!-- Displays the message from the Home Controller -->
 <h1>@ViewBag.Message</h1>

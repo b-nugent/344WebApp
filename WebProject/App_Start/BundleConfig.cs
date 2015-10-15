@@ -9,7 +9,7 @@ namespace WebApplication5
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js"));
+                        "~/Scripts/jquery.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
@@ -31,10 +31,11 @@ namespace WebApplication5
             bundles.Add(new StyleBundle("~/Content/fullcalendarcss").Include(
                      "~/Content/fullcalendar.min.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/fullcalendarjs").Include(
-                      "~/Scripts/jquery.min.js",
-                      "~/Scripts/moment.min.js",
-                      "~/Scripts/fullcalendar.min.js"));
+            bundles.Add(new ScriptBundle("~/bundles/moment").Include(
+                      "~/Scripts/moment.min.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/fullcalendar").Include(
+                       "~/Scripts/fullcalendar.js"));
         }
     }
 }
