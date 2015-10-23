@@ -2,7 +2,11 @@
     ViewBag.Title = "Stock";
 }
 
-
+<style>
+#stockField{
+    height: 200px;
+}
+</style>
 
 <h1>Stock Search</h1>
 
@@ -15,8 +19,9 @@
     <h2>Stock Information</h2>
 </div>
 
-<div class ="chartInfo" id="chartInfo">
-
+<div class ="stockNote" id="stockNote">
+    <button type="button" id="makeNote">Make Note</button>
+    <input id="stockField" type ="text" size ="50" maxlength="150" placeholder="Stock Note" />
 </div>
 
 

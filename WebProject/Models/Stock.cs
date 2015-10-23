@@ -9,11 +9,10 @@ namespace StockDescription{
     {
         public string Symbol { get; set; }
         public string Name { get; set; }
-        public decimal CurrentPrice { get; set; }
-        public decimal DaysHigh { get; set; }
-        public decimal DaysLow { get; set; }
-        public decimal YearHigh { get; set; }
-        public decimal YearLow { get; set; }
+        public decimal BoughtPrice { get; set; }
+        public decimal SoldPrice { get; set; }
+        public int NumShares { get; set; }
+        public string Note { get; set; }
     }
 
 }
