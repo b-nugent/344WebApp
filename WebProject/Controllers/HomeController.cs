@@ -10,10 +10,14 @@ using WebApplication5.Models;
 namespace WebApplication5.Controllers
 {
     [LogInAttribute]
-    [RequireHttps]
     public class HomeController : Controller {
         public ActionResult Index() {
             UserPostsModels model = new UserPostsModels();
+            if (Session["access_token"] == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var client = new FacebookClient(Session["access_token"].ToString());
             try
             {
