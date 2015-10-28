@@ -4,8 +4,6 @@
 
 @section JavaScript{
     @Styles.Render("~/Content/fullcalendarcss")
-
-
 }
 
 
@@ -15,18 +13,84 @@
     }
 </style>
 
-
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script>
     // Only load the calendar when the page is done loading everything else.
     $(document).ready(function () {
+        $('#createEvent').hide();
+        //var date = new Date();
+        //var d = date.getDate();
+       // var m = date.getMonth();
+        //var y = date.getFullYear();
+        var d;
+
+        /*
+        $('#button_id').click(function () {
+            var newEvent = {
+                title: 'TEST EVENT',
+                start: new Date(y, m, d)
+            };
+            $('#calendar').fullCalendar('renderEvent', newEvent, 'stick');
+        });
+        */
         // Targets the calendar div and will put the calendar and all of its functionality there.
         $('#calendar').fullCalendar({
-        })
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+
+            dayClick: function(date) {
+                //alert("I got called, and it was awesome!");
+                /*
+                var newEvent = {
+                    title: 'TEST EVENT',
+                    start: new Date(y, m, d)
+                };
+                $('#calendar').fullCalendar('renderEvent', newEvent, 'stick');
+                */
+                d = date.format();
+                $('#createEvent').show();
+                $('#eventStart').val(d);
+            },
+
+            editable: true
+        });
+    });
+
+    $(function () {
+        $("#date").datepicker();
+    });
+
+    $(function () {
+        $("#createEventButton").click(function () {
+            var newEvent = {
+                title: $("#eventTitle").val(),
+                start: $("#eventStart").val(),
+                end: $("#eventEnd").val(),
+                allDay: false
+            };
+            $('#calendar').fullCalendar('renderEvent', newEvent, true);
+            $('#createEvent').hide();
+        });
     });
 </script>
 
 <!-- Displays the message from the Home Controller -->
 <h1>@ViewBag.Message</h1>
+
+<!-- This is where the event creation forms will appear -->
+<div id="createEvent">
+    <form>
+        Title: <input id="eventTitle" type="text" name="eventTitle" value="My Birthday"><br>
+        Description: <input id="eventDescription" type="text" name="eventDescription" value="Description"><br>
+        Start: <input id="eventStart" type="text" name="eventStartTime"><br>
+        End: <input id="eventEnd" type="text" name="eventEndTime"><br>
+        <input id="createEventButton" type="submit" value="Create">
+    </form>
+</div>
 
 <!-- This is where the calendar will be displayed -->
 <div id='calendar'></div>
