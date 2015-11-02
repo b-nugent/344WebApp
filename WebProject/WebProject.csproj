@@ -234,7 +234,7 @@
     <Content Include="Views\Home\Index.cshtml">
       <BrowseToURL>~/Home/Index</BrowseToURL>
     </Content>
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Shared\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
