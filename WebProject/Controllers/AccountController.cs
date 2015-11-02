@@ -165,7 +165,7 @@ namespace WebApplication5.Controllers
         {
             Session.Abandon();
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Login", "Account");
+            return RedirectToAction("Index", "Home");
         }
 
         //
