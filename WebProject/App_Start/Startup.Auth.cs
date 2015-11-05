@@ -55,13 +55,31 @@ namespace WebApplication5
             {
                 AppId = "517975801705838",
                 AppSecret = "032717785512919f1c5620ddab987a16",
+                SignInAsAuthenticationType = DefaultAuthenticationTypes.ExternalCookie,
                 BackchannelHttpHandler = new FacebookBackChannelHandler(),
-                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,name,email"
-                
+                UserInformationEndpoint = "https://graph.facebook.com/v2.4/me?fields=id,name,email",
+                Provider = new Microsoft.Owin.Security.Facebook.FacebookAuthenticationProvider()
+                {
+                    OnAuthenticated = (context) =>
+                    {
+                        context.Identity.AddClaim(new System.Security.Claims.Claim("FacebookAccessToken", context.AccessToken));
+                        foreach (var claim in context.User)
+                        {
+                            var claimType = string.Format("urn:facebook:{0}", claim.Key);
+                            string claimValue = claim.Value.ToString();
+                            if (!context.Identity.HasClaim(claimType, claimValue))
+                                context.Identity.AddClaim(new System.Security.Claims.Claim(claimType, claimValue, "XmlSchemaString", "Facebook"));
+
+                        }
+                        return Task.FromResult(0);
+                    }
+                }
             };
 
             //Way to specify additional scopes
             facebookOptions.Scope.Add("email");
+            facebookOptions.Scope.Add("user_posts");
+            facebookOptions.Scope.Add("publish_actions");
 
             app.UseFacebookAuthentication(facebookOptions);
 
