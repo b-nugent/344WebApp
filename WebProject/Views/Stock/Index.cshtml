@@ -19,10 +19,23 @@
     <h2>Stock Information</h2>
 </div>
 
-<div class ="stockNote" id="stockNote">
-    <button type="button" id="makeNote">Make Note</button>
-    <input id="stockField" type ="text" size ="50" maxlength="150" placeholder="Stock Note" />
-</div>
+
+@using (Html.BeginForm("AddNote", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+{
+    <div class ="stockNote form-group" id="stockNote">
+        <div class="form-group">
+            @Html.TextBox("stock", "", new { @class = "form-control col-md-12", rows = 3, cols = 80 })
+        </div>
+        <div class="form-group">
+            @Html.TextArea("note", new { @class = "form-control col-md-12", rows = 3, cols = 80})
+        </div>
+            
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="Update" />
+        </div>
+    </div>
+}
+
 
 
 <div id="container" style="height: 400px; min-width: 310px"></div>
