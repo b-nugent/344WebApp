@@ -1,0 +1,160 @@
+﻿@{  
+    ViewBag.Title = "Calendar";
+}
+
+@section JavaScript{
+    @Styles.Render("~/Content/fullcalendarcss")
+}
+
+
+<style>
+    h1 {
+        text-align: center;
+    }
+
+    #createEvent {
+        margin: 0 auto;
+        padding: 30px 0 30px 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    #createEvent label {
+        height: 25px;
+        width: 150px;
+        float: left;
+        display: block;
+        vertical-align: middle;
+        margin: 5px 0 5px 0;
+    }
+
+    #EventName, #EventDescription, #EventStart, #EventEnd {
+        height: 35px;
+        display: block;
+        vertical-align: middle;
+        padding: 0 10px 0 10px;
+        margin: 0;
+    }
+
+    #createEventButton {
+        padding: 5px 15px 5px 15px;
+    }
+
+    .form-control {
+        width: 200px;
+    }
+</style>
+
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script>
+    // Only load the calendar when the page is done loading everything else.
+    $(document).ready(function () {
+        $('#createEvent').hide();
+        var d;
+
+        // Targets the calendar div and will put the calendar and all of its functionality there.
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+
+            dayClick: function(date) {
+                d = date.format();
+                $('#createEvent').show();
+                $('#EventName').val("");
+                $('#EventDescription').val("");
+                $('#EventStart').val(d);
+                $('#EventEnd').val(d);
+                window.scrollTo(0, 0);
+            },
+
+            editable: true
+        });
+    });
+
+    $(function () {
+        $("#date").datepicker();
+    });
+
+    $(function () {
+        $("#createEventButton").click(function () {
+            var newEvent = {
+                title: $("#EventName").val(),
+                description: $("#EventDescription").val(),
+                start: $("#EventStart").val(),
+                end: $("#EventEnd").val(),
+                allDay: false
+            };
+            /*
+            $.ajax({
+                method: "POST",
+                url: "CalendarController.cs",
+                data: newEvent,
+                success: function (html) {
+                    alert('YOU DID IT!');
+                }
+
+            });
+            */
+            $('#createEvent').hide();
+            $('#calendar').fullCalendar('renderEvent', newEvent, true);
+            
+        });
+    });
+</script>
+
+<!-- Displays the message from the Home Controller -->
+<h1>@ViewBag.Message</h1>
+
+<!-- This is where the event creation forms will appear -->
+<div id="createEvent">
+    @using (Html.BeginForm("StoreEvent", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+    {
+        <div class="form-group">
+            @Html.Label("Event Name:")
+            @Html.TextArea("EventName", new { @class = "form-control", id = "EventName" })
+        </div>
+        <div class="form-group">
+            @Html.Label("Description:")
+            @Html.TextArea("EventDescription", new { @class = "form-control", id = "EventDescription" })
+        </div>
+        <div class="form-group">
+            @Html.Label("Start Time:")
+            @Html.TextArea("EventStart", new { @class = "form-control", id = "EventStart" })
+        </div>
+        <div class="form-group">
+            @Html.Label("End Time:")
+            @Html.TextArea("EventEnd", new { @class = "form-control", id = "EventEnd" })
+        </div>
+        <div class="form-group">
+            <input id="createEventButton" type="submit" class="btn btn-primary" value="Create" />
+        </div>
+
+    }
+    <!--
+    <form method="post" action="">
+        <label for="#EventName">Title:</label>
+        <input id="EventName" name="EventName" type="text" value=""><br>
+        
+        <label for="#EventDescription">Description:</label>
+        <input id="EventDescription" name="EventDescription" type="text" value=""><br>
+        
+        <label for="#EventStart">Start:</label>
+        <input id="EventStart" name="EventStart" type="text" value=""><br>
+        
+        <label for="#EventEnd">End:</label>
+        <input id="EventEnd" name="EventEnd" type="text" value=""><br>
+        
+        <input id="createEventButton" type="submit" value="Create">
+    </form>
+        -->
+</div>
+
+<!-- This is where the calendar will be displayed -->
+<div id='calendar'></div>
+
+
+
