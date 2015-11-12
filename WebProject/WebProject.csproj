@@ -242,11 +242,9 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Home\Calendar.cshtml">
-      <BrowseToURL>~/Home/Calendar</BrowseToURL>
-    </Content>
     <Content Include="Views\Stock\Index.cshtml" />
     <Content Include="Views\Stock\IndividualStock.cshtml" />
+    <Content Include="Views\Calendar\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
