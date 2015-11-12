@@ -14,7 +14,7 @@ namespace WebApplication5.App_Data
         public SqlDataReader DataReader;
         public SqlCommand Command;
         private string mySqlConnectionString = System.Configuration.ConfigurationManager.
-                                               ConnectionStrings["connectionStringName"].ConnectionString;
+                                               ConnectionStrings["DefaultConnection"].ConnectionString;
         public void CloseConn()
         {
             if (Connection != null)

@@ -98,6 +98,7 @@ namespace WebApplication5
             // Replace the RequestUri so it's not malformed
             if (!request.RequestUri.AbsolutePath.Contains("/oauth"))
             {
+                Console.Write(request.ToString());
                 request.RequestUri = new Uri(request.RequestUri.AbsoluteUri.Replace("?access_token", "&access_token"));
             }
 
