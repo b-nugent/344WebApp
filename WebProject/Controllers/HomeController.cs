@@ -69,12 +69,6 @@ namespace WebApplication5.Controllers
             return View();
         }
 
-        public ActionResult Stock() {
-            // This is a message that can be called on the Stock's page.
-            ViewBag.Message = "Stock";
-            return View();
-        }
-
         public ActionResult UpdateStatus(string status)
         {
             if (status == "")
