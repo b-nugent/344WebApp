@@ -47,7 +47,7 @@
 </style>
 <div id="RefreshArea">
     @{
-        Html.Partial("ChatHistory", Model);
+        Html.RenderPartial("ChatHistory", Model);
     }
 </div>
 @Ajax.ActionLink("ActionLink", "Index", new { user = "", logOn="",logOff="",chatMessage = "" }, new AjaxOptions { UpdateTargetId = "RefreshArea", OnSuccess = "ChatOnSuccess", OnFailure = "ChatOnFailure" }, new { @id = "ActionLink", @style = "visibility:hidden;" })
