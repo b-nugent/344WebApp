@@ -9,43 +9,42 @@ using WebApplication5.Models;
 
 namespace WebApplication5.Controllers
 {
-    [LogInAttribute]
+    [AllowAnonymous]
     public class HomeController : Controller {
         public ActionResult Index() {
+            //ViewBag.ReturnUrl = returnUrl;
             UserPostsModels model = new UserPostsModels();
-            if (Session["access_token"] == null)
+            if (Session["access_token"] != null)
             {
-                return RedirectToAction("Login", "Account");
-            }
-
-            var client = new FacebookClient(Session["access_token"].ToString());
-            try
-            {
-                dynamic fbresult = client.Get("/" + Session["uid"].ToString() + "/feed?fields=from,created_time,type,message");
-                IList<UserPost> posts = new List<UserPost>();
-                foreach (var res in fbresult)
+                var client = new FacebookClient(Session["access_token"].ToString());
+                try
                 {
-                    if (res.Value != null)
+                    dynamic fbresult = client.Get("/" + Session["uid"].ToString() + "/feed?fields=from,created_time,type,message");
+                    IList<UserPost> posts = new List<UserPost>();
+                    foreach (var res in fbresult)
                     {
-                        foreach (var value in res.Value)
+                        if (res.Value != null)
                         {
-                            if ((value.Key != "previous" && value.Key != "next"))
+                            foreach (var value in res.Value)
                             {
-                                if (value["type"] == "status" && value["from"]["id"] == Session["uid"].ToString())
+                                if ((value.Key != "previous" && value.Key != "next"))
                                 {
-                                    UserPost aPost = new UserPost();
-                                    aPost.type = value["type"];
-                                    aPost.createdTime = value["created_time"];
-                                    aPost.message = value["message"];
-                                    posts.Add(aPost);
+                                    if (value["type"] == "status" && value["from"]["id"] == Session["uid"].ToString())
+                                    {
+                                        UserPost aPost = new UserPost();
+                                        aPost.type = value["type"];
+                                        aPost.createdTime = value["created_time"];
+                                        aPost.message = value["message"];
+                                        posts.Add(aPost);
+                                    }
                                 }
                             }
                         }
                     }
+                    model.posts = posts;
                 }
-                model.posts = posts;
+                catch (FacebookOAuthException e) { }
             }
-            catch (FacebookOAuthException e) { }
 
             return View(model);
         }
@@ -67,12 +66,6 @@ namespace WebApplication5.Controllers
             // This is a message that can be called on the Calendar's page.
             ViewBag.Message = "Calendar";
 
-            return View();
-        }
-
-        public ActionResult Stock() {
-            // This is a message that can be called on the Stock's page.
-            ViewBag.Message = "Stock";
             return View();
         }
 

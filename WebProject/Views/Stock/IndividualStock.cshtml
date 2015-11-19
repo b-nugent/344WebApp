@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "IndividualStock";
+}
+
+<h2>IndividualStock</h2>
+
+<script src='/Scripts/jquery.min.js'></script>
+<script type="text/javascript"
+          src="https://www.google.com/jsapi?autoload={
+            'modules':[{
+              'name':'visualization',
+              'version':'1',
+              'packages':['corechart']
+            }]
+          }"></script>
+
+<div class="stockstuff" id="stockstuff">
+
+</div>
+
+<script>
+    var stockInfo;
+    var stockDate;
+    var stockPrice;
+
+    google.setOnLoadCallback(drawChart);
+
+    function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'date');
+        data.addColumn('number', 'price');
+
+        for (i = 0; i < stockDate.length; i++) {
+            data.addRow([date[i], price[i]]);
+            console.log(date[i]);
+        }
+
+        var options = {
+            title: 'Stock Chart',
+            curveType: 'function',
+            legend: { position: 'bottom' }
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+
+        chart.draw(data, options);
+    }
+</script>

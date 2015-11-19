@@ -1,39 +1,48 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using StockRetriever;
-using StockDescription;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using WebApplication5.App_Data;
+using System.Data.SqlClient;
 
-namespace StockInfo
+namespace WebApplication5.Controllers
 {
-    public class StockHandler
+    public class StockController : Controller
     {
-        public static void getInfo(string ticker)
+        public ActionResult Index()
         {
-            string csvData;
-
-            using (WebClient web = new WebClient())
-            {
-                csvData = web.DownloadString(makeString(ticker));
-            }
-
-            List<Stock> prices = YahooFinance.Parse(csvData);
-
-            foreach (Stock price in prices)
-            {
-                System.Console.WriteLine(string.Format("{0} ({1})  Current Price:{2} Day's High:{3} Day's Low:{4} Year High: {5} YearLow:{6}",price.Name,price.Symbol,price.CurrentPrice,price.DaysHigh,price.DaysLow,price.YearHigh,price.YearLow));
-            }
-
-
-
+            // This is a message that can be called on the Stock's page.
+            ViewBag.Message = "Stock";
+            return View();
         }
-        private static string makeString(string ticker)
+
+        public ActionResult AddNote(string stock, string note)
         {
-            string finalString = "http://finance.yahoo.com/d/quotes.csv?s=";
-            finalString += ticker.ToUpper();
-            finalString += "&f=snahgkj";
-            return finalString;
+            string userId = User.Identity.GetUserId();
+
+            MySqlConnection conn = new MySqlConnection();
+            conn.CreateConn();
+            SqlCommand cmd = new SqlCommand("AddStockNote", conn.Connection);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("@UserId", userId));
+            cmd.Parameters.Add(new SqlParameter("@StockName", stock));
+            cmd.Parameters.Add(new SqlParameter("@StockNote", note));
+
+            conn.Command = cmd;
+            conn.Command.Prepare();
+            conn.Command.ExecuteNonQuery();
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult IndividualStock()
+        {
+            // This is a message that can be called on the Stock's page.
+            ViewBag.Message = "IndividualStock";
+
+            return View();
         }
     }
-
 }

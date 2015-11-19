@@ -1,0 +1,146 @@
+﻿@{
+    ViewBag.Title = "Stock";
+}
+
+<style>
+#stockField{
+    height: 200px;
+}
+</style>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Stock Search</h2>
+        <div class="stockSearch">
+            <div class="col-md-3" style="padding-left: 0px;">
+                <button type="button" class="btn btn-primary" id="search">Search</button>
+            </div>
+            <div class="col-md-9">
+                <input id="stockTicker" class="form-control" type="text" size="20" maxlength="4" placeholder="Stock Ticker"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h2>Stock Note</h2>
+        @using (Html.BeginForm("AddNote", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+        {
+            <div class ="stockNote form-group" id="stockNote">
+                <div class="form-group">
+                    @Html.TextBox("stock", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Ticker" })
+                </div>
+                <div class="form-group">
+                    @Html.TextArea("note", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Note"})
+                </div>
+            
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Update" />
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+
+<div class="stockInfo" id="stockInfo">
+</div>
+
+<div id="container" style="height: 400px; min-width: 310px"></div>
+
+@section JavaScript{
+    <script src='/Scripts/jquery.min.js'></script>
+    <script src="/Scripts/chart.js"></script>
+    <script src="/Scripts/highstock.js"></script>
+     
+}
+
+<script>
+    var quoteData = [];
+    var purchaseDate = [];
+    var purchasePrice = [];
+    var items = [];
+    var symbol;
+    var chart;
+    jQuery(document).ready(function ($) {
+        $('#search').click(function () {
+            $('#stockInfo').html("");
+            $('#stockInfo').html("<h2>Stock Information</h2>");
+            items.length = 0;
+            symbol = $('input[id=stockTicker]').val();
+            var url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%3D%22' + symbol + '%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=';
+            $.getJSON(url, function (data) {
+                $.each(data.query.results.quote, function (key, val) {
+
+                    if (key == "Name" | key == "DaysHigh" | key == "DaysLow" | key == "YearHigh" | key == "YearLow" | key == "LastTradePriceOnly") {
+                        if (val != null) {
+                            items.push('<li id="' + key + '">' + key + ": " + val + '</li>');
+                        }
+                    }
+
+                    if (key == "Name" & val == null) {
+                        $('#stockInfo').html("<h2>Stock Information</h2>\nInvalid Stock Symbol");
+                    }
+
+                });
+                $('<ul/>', { 'class': 'my-new-list', html: items.join('') }).appendTo('#stockInfo');
+            });
+
+
+            quoteData.length = 0; //clear old information
+
+            $(function () {
+
+                var url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22" + symbol + "%22%20and%20startDate%20%3D%20%222015-01-01%22%20and%20endDate%20%3D%20%222015-10-10%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
+
+                $.getJSON(url, function (data) {
+
+                    $.each(data.query.results.quote, function (index, value) {
+                        var theTime = value.Date;
+                        var milliTime = new Date(theTime);
+                        milliTime = milliTime.getTime();
+
+                        var results = [milliTime, parseFloat(value.Low), parseFloat(value.High), parseFloat(value.Close)]; //store information from the query
+
+                        quoteData.push(results);
+
+                    })
+
+                    quoteData = quoteData.reverse(); //sort the query's information to be chronological
+                });
+
+                setTimeout("createChart()", 1000);
+
+            });
+        });
+    });
+
+    function createChart() {
+
+        // Create the chart
+        chart = new Highcharts.StockChart({
+            chart: {
+                renderTo: 'container'
+            },
+
+            rangeSelector: {
+                selected: 1
+            },
+
+            title: {
+                text: symbol.toUpperCase() + ' Stock Price'
+            },
+
+            series: [{
+                name: symbol,
+                data: quoteData,
+                tooltip: {
+                    valueDecimals: 2
+                }
+            }]
+        });
+
+    }
+
+
+
+    </script>
