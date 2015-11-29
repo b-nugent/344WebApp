@@ -5,14 +5,16 @@
 /// </summary>
 namespace StockDescription{
 
+    public interface StockInterface { }
+
     public class Stock
     {
-        public string Symbol { get; set; }
-        public string Name { get; set; }
-        public decimal BoughtPrice { get; set; }
-        public decimal SoldPrice { get; set; }
-        public int NumShares { get; set; }
-        public string Note { get; set; }
+        public virtual string Symbol { get; set; }
+        public virtual string Name { get; set; }
+        public virtual decimal BoughtPrice { get; set; }
+        public virtual decimal SoldPrice { get; set; }
+        public virtual int NumShares { get; set; }
+        public virtual string Note { get; set; }
     }
 
 }
