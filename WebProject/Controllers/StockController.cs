@@ -27,7 +27,7 @@ namespace StockInfo
 
 
         }
-        private static string makeString(string ticker)
+        public static string makeString(string ticker)
         {
             string finalString = "http://finance.yahoo.com/d/quotes.csv?s=";
             finalString += ticker.ToUpper();
