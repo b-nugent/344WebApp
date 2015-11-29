@@ -21,6 +21,24 @@ namespace NUnitTests
         }
 
         [Test]
+        public void TestCalendarIndex()
+        {
+            var obj = new WebApplication5.Controllers.HomeController();
+            var actionResult = obj.Calendar() as ViewResult;
+            Assert.That(actionResult.ViewName, Is.EqualTo(""));
+        }
+
+        [Test]
+        public void TestContactIndex()
+        {
+            var obj = new WebApplication5.Controllers.HomeController();
+            var actionResult = obj.Contact() as ViewResult;
+            Assert.That(actionResult.ViewName, Is.EqualTo(""));
+        }
+
+
+
+        [Test]
         public void TestUpdateStatus()
         {
             var obj = new WebApplication5.Controllers.HomeController();
