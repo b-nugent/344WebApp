@@ -86,8 +86,8 @@
 
                     events:$.map(data, function(item, i) {
                         var event = new Object();
-                        event.start = moment(item.DateFrom).utc();
-                        event.end = moment(item.DateTo).utc();
+                        event.start = moment(item.DateFrom);
+                        event.end = moment(item.DateTo);
                         event.title = item.Name;
                         event.brief = item.Description;
                         event.id = item.UserId;
