@@ -69,6 +69,7 @@ namespace WebApplication5.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
+            ControllerContext.HttpContext.Session.RemoveAll();
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
@@ -81,7 +82,7 @@ namespace WebApplication5.Controllers
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             if (loginInfo == null)
             {
-                return RedirectToAction("Login");
+                return RedirectToAction("Index","Home");
             }
             //return RedirectToLocal(returnUrl);
 
