@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using WebApplication5.App_Data;
 using System.Data.SqlClient;
+using WebApplication5.Models;
 
 namespace WebApplication5.Controllers {
     public class CalendarController : Controller {
@@ -34,6 +35,13 @@ namespace WebApplication5.Controllers {
             db.Command.ExecuteNonQuery();
 
             return RedirectToAction("Index");
+        }
+
+        public JsonResult GetEvents()
+        {
+            List<EventModel> events = new List<EventModel>();
+            events.Add(new EventModel {UserId="A",Name="test",Description="test",DateFrom="12-02-2015",DateTo="12-02-2015"});
+            return Json(events, JsonRequestBehavior.AllowGet);
         }
 	}
 }

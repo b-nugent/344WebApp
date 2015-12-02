@@ -53,27 +53,50 @@
         $('#createEvent').hide();
         var d;
 
-        // Targets the calendar div and will put the calendar and all of its functionality there.
-        $('#calendar').fullCalendar({
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            },
-
-            dayClick: function(date) {
-                d = date.format();
-                $('#createEvent').show();
-                $('#EventName').val("");
-                $('#EventDescription').val("");
-                $('#EventStart').val(d);
-                $('#EventEnd').val(d);
-                window.scrollTo(0, 0);
-            },
-
-            editable: true
-        });
+        GetEvents();
     });
+
+    function GetEvents() {
+        $.ajax({
+            dataType: "json",
+            contentType: "application/json",
+            data: "{}",
+            url: "/Calendar/GetEvents",
+            dataType: "json",
+            success: function (data) {
+                // Targets the calendar div and will put the calendar and all of its functionality there.
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'month,agendaWeek,agendaDay'
+                    },
+
+                    dayClick: function (date) {
+                        d = date.format();
+                        $('#createEvent').show();
+                        $('#EventName').val("");
+                        $('#EventDescription').val("");
+                        $('#EventStart').val(d);
+                        $('#EventEnd').val(d);
+                        window.scrollTo(0, 0);
+                    },
+
+                    editable: true,
+
+                    events:$.map(data, function(item, i) {
+                        var event = new Object();
+                        event.start = moment(item.DateFrom).utc();
+                        event.end = moment(item.DateTo).utc();
+                        event.title = item.Name;
+                        event.brief = item.Description;
+                        event.id = item.UserId;
+                        return event;
+                    })
+                });
+            }
+        })
+    }
 
     $(function () {
         $("#date").datepicker();
