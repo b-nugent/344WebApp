@@ -22,7 +22,7 @@ namespace WebApplication5.Controllers {
             MySqlConnection db = new MySqlConnection();
             db.CreateConn();
 
-            SqlCommand cmd = new SqlCommand("AddEvent", db.Connection);
+            SqlCommand cmd = new SqlCommand("AddCalendarEvent", db.Connection);
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
             cmd.Parameters.Add(new SqlParameter("@EventName", EventName));
