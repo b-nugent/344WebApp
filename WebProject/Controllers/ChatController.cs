@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using WebApplication5.Models;
+using WebApplication5.App_Data;
+using System.Data.SqlClient;
 
 namespace WebApplication5.Controllers
 {
@@ -96,12 +99,20 @@ public class ChatController : Controller
                 #region if there is a new message, append it to the chat
                 if (!string.IsNullOrEmpty(chatMessage))
                 {
-                    chatModel.ChatHistory.Add(new ChatModel.ChatMessage()
-                    {
-                        ByUser = currentUser,
-                        Message = chatMessage,
-                        When = DateTime.Now
-                    });
+                    
+                    string userId = User.Identity.GetUserId();
+
+                    MySqlConnection conn = new MySqlConnection();
+                    conn.CreateConn();
+                    SqlCommand cmd = new SqlCommand("AddChatMessage", conn.Connection);
+                    cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                    cmd.Parameters.Add(new SqlParameter("@UserId", userId));
+                    cmd.Parameters.Add(new SqlParameter("@Message", chatMessage));
+                    cmd.Parameters.Add(new SqlParameter("@DateTime", DateTime.Now));
+                
+                    conn.Command = cmd;
+                    conn.Command.Prepare();
+                    conn.Command.ExecuteNonQuery();
                 }
                 #endregion
 
