@@ -49,19 +49,7 @@ namespace WebApplication5.Controllers {
         public ActionResult DownloadEvents()
         {
             List<EventModel> events = QueryEvents();
-            /*
-            var cd = new System.Net.Mime.ContentDisposition
-            {
-                // for example foo.bak
-                FileName = "events.json",
-
-                // always prompt the user for downloading, set to true if you want 
-                // the browser to try to show the file inline
-                Inline = false,
-            };
             
-            Response.AppendHeader("Content-Disposition", cd.ToString());
-             */
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(events);
             byte[] jsonEncoded = Encoding.ASCII.GetBytes(json);
             return File(jsonEncoded,"text/plain","events.json");
