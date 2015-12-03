@@ -19,21 +19,7 @@ namespace WebApplication5.Controllers {
         }
         
         public ActionResult StoreEvent(string EventName, string EventDescription, DateTime EventStart, DateTime EventEnd) {
-            string UserID = User.Identity.GetUserId();
-            MySqlConnection db = new MySqlConnection();
-            db.CreateConn();
-
-            SqlCommand cmd = new SqlCommand("AddCalendarEvent", db.Connection);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
-            cmd.Parameters.Add(new SqlParameter("@EventName", EventName));
-            cmd.Parameters.Add(new SqlParameter("@EventDescription", EventDescription));
-            cmd.Parameters.Add(new SqlParameter("@EventStart", EventStart));
-            cmd.Parameters.Add(new SqlParameter("@EventEnd", EventEnd));
-
-            db.Command = cmd;
-            db.Command.Prepare();
-            db.Command.ExecuteNonQuery();
+            InsertEvent(EventName, EventDescription, EventStart, EventEnd);
 
             return RedirectToAction("Index");
         }
@@ -42,7 +28,6 @@ namespace WebApplication5.Controllers {
         {
             List<EventModel> events = QueryEvents();
            
-            //events.Add(new EventModel {UserId="A",Name="test",Description="test",DateFrom="12-02-2015",DateTo="12-02-2015"});
             return Json(events, JsonRequestBehavior.AllowGet);
         }
 
@@ -53,6 +38,47 @@ namespace WebApplication5.Controllers {
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(events);
             byte[] jsonEncoded = Encoding.ASCII.GetBytes(json);
             return File(jsonEncoded,"text/plain","events.json");
+        }
+
+        public ActionResult UploadEvents(HttpPostedFileBase file)
+        {
+            if (file.ContentLength > 0)
+            {
+                byte[] fileContents = new byte[file.ContentLength];
+                file.InputStream.Read(fileContents, 0, file.ContentLength);
+
+                string json = Encoding.ASCII.GetString(fileContents);
+
+                List<EventModel> events = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EventModel>>(json);
+                foreach(EventModel e in events) 
+                {
+                    InsertEvent(e.Name, e.Description,Convert.ToDateTime(e.DateFrom),Convert.ToDateTime(e.DateTo));
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        private void InsertEvent(string EventName, string EventDescription, DateTime EventStart, DateTime EventEnd)
+        {
+            string UserID = User.Identity.GetUserId();
+            if (UserID != null)
+            {
+                MySqlConnection db = new MySqlConnection();
+                db.CreateConn();
+
+                SqlCommand cmd = new SqlCommand("AddCalendarEvent", db.Connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
+                cmd.Parameters.Add(new SqlParameter("@EventName", EventName));
+                cmd.Parameters.Add(new SqlParameter("@EventDescription", EventDescription));
+                cmd.Parameters.Add(new SqlParameter("@EventStart", EventStart));
+                cmd.Parameters.Add(new SqlParameter("@EventEnd", EventEnd));
+
+                db.Command = cmd;
+                db.Command.Prepare();
+                db.Command.ExecuteNonQuery();
+            }
         }
 
         private List<EventModel> QueryEvents()

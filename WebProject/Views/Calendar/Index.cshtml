@@ -182,6 +182,17 @@
             <input type="submit" class="btn btn-success" value="Download" />
         </div>
     }
+
+    @using (Html.BeginForm("UploadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            <label for="file">Filename:</label>
+              <input class="form-control" type="file" name="file" id="file" />
+
+              <input class="btn btn-primary" type="submit" />
+        </div>
+    }
+
 </div>
 <!-- This is where the calendar will be displayed -->
 <div id='calendar'></div>
