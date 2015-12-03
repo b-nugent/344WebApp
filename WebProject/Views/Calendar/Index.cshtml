@@ -175,7 +175,14 @@
     </form>
         -->
 </div>
-
+<div>
+    @using (Html.BeginForm("DownloadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+    {
+        <div class="form-group">
+            <input type="submit" class="btn btn-success" value="Download" />
+        </div>
+    }
+</div>
 <!-- This is where the calendar will be displayed -->
 <div id='calendar'></div>
 
