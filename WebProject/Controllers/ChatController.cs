@@ -83,24 +83,24 @@ public class ChatController : Controller
     public static void LogOffUser(ChatModel.ChatUser user)
     {
         ChatModel.ChatUser userToRemove = null;
-        foreach (ChatModel.ChatUser aUser in chatModel.Users)
+        if (chatModel != null)
         {
-            if (aUser.ChatUserID.Equals(user.ChatUserID))
+            foreach (ChatModel.ChatUser aUser in chatModel.Users)
             {
-                userToRemove = aUser;
+                if (aUser.ChatUserID.Equals(user.ChatUserID))
+                {
+                    userToRemove = aUser;
+                }
             }
+            chatModel.Users.Remove(userToRemove);
         }
-        chatModel.Users.Remove(userToRemove);
+        
     }
 
     private ActionResult CheckLoggedInUser(string UserID, ChatModel chatModel)
     {
         //check if nickname already exists
-        if (chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId()) != null)
-        {
-            throw new Exception("You are already logged into chat");
-        }
-        else
+        if (chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId()) == null)
         {
             #region create new user and add to lobby
             chatModel.Users.Add(new ChatModel.ChatUser()

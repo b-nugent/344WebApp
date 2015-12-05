@@ -90,13 +90,7 @@
     </style>
 </head>
 <body>
-    @{
-        if(Model == null) {
-            <div class="alert alert-info">
-                Please log in to Facebook to use the chat feature.
-            </div>
-        }
-        else {
+    
             <div id="YourNickname">
             </div>
             <div id="LastRefresh">
@@ -113,7 +107,7 @@
             </div>
             @Ajax.ActionLink("Login", "Index", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
         }
-    }
+    
     
 </body>
 </html>

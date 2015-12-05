@@ -131,9 +131,9 @@
 <div class="row">
     <div class="col-md-6">
         @{
-            if(User.Identity.GetUserId() == null){
+            if(User.Identity.GetUserId() == null || Model.posts == null){
                 <div class="alert alert-info">
-                    Please log in to Facebook to access chat features.
+                    Please log in through Facebook to access chat features.
                 </div>
             }
             else {
