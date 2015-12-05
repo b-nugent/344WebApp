@@ -6,7 +6,7 @@
         var nickName = $("#txtNickName").val();
         if (nickName) {
             //call the Index method of the controller and pass the attribute "logOn"
-            var href = "/Chat/Index?user=" + encodeURIComponent(nickName);
+            var href = "/Home/Index?user=" + encodeURIComponent(nickName);
             href = href + "&logOn=true";
             $("#LoginButton").attr("href", href).click();
 
@@ -50,7 +50,7 @@ function LoginOnSuccess(result) {
         if (text) {
 
             //call the Index method of the controller and pass the attribute "chatMessage"
-            var href = "/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
+            var href = "/Home/Index?user=" + encodeURIComponent($("#YourNickname").text());
             href = href + "&chatMessage=" + encodeURIComponent(text);
             $("#ActionLink").attr("href", href).click();
 
@@ -63,11 +63,11 @@ function LoginOnSuccess(result) {
     $("#btnLogOff").click(function () {
 
         //call the Index method of the controller and pass the attribute "logOff"
-        var href = "/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
+        var href = "/Home/?user=" + encodeURIComponent($("#YourNickname").text());
         href = href + "&logOff=true";
         $("#ActionLink").attr("href", href).click();
 
-        document.location.href = "Chat/Index";
+        document.location.href = "Home/Index";
     });
 
 }

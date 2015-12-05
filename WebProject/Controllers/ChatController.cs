@@ -12,7 +12,7 @@ namespace WebApplication5.Controllers
 {
 public class ChatController : Controller
 {
-
+    int msgID = 0;
     static ChatModel chatModel;
 
     /// <summary>
@@ -23,6 +23,8 @@ public class ChatController : Controller
     /// </summary>
     public ActionResult Index(string user,bool? logOn, bool? logOff, string chatMessage)
     {
+        string UserID = User.Identity.GetUserId();
+        
         try
         {
             if (chatModel == null) chatModel = new ChatModel();
@@ -39,7 +41,7 @@ public class ChatController : Controller
             else if (logOn != null && (bool)logOn)
             {
                 //check if nickname already exists
-                if (chatModel.Users.FirstOrDefault(u => u.NickName == user) != null)
+                if (chatModel.Users.FirstOrDefault(u => u.ChatUserID == user) != null)
                 {
                     throw new Exception("This nickname already exists");
                 }
@@ -52,7 +54,8 @@ public class ChatController : Controller
                     #region create new user and add to lobby
                     chatModel.Users.Add( new ChatModel.ChatUser()
                     {
-                        NickName = user,
+                        ChatUserID = UserID,
+                        Name = User.Identity.GetUserName(),
                         LoggedOnTime = DateTime.Now,
                         LastPing = DateTime.Now
                     });
@@ -71,13 +74,13 @@ public class ChatController : Controller
             }
             else if (logOff != null && (bool)logOff)
             {
-                LogOffUser( chatModel.Users.FirstOrDefault( u=>u.NickName==user) );
+                LogOffUser( chatModel.Users.FirstOrDefault( u=>u.ChatUserID==User.Identity.GetUserId()) );
                 return PartialView("Lobby", chatModel);
             }
             else
             {
 
-                ChatModel.ChatUser currentUser = chatModel.Users.FirstOrDefault(u => u.NickName == user);
+                ChatModel.ChatUser currentUser = chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId());
 
                 //remember each user's last ping time
                 currentUser.LastPing = DateTime.Now;
@@ -99,25 +102,59 @@ public class ChatController : Controller
                 #region if there is a new message, append it to the chat
                 if (!string.IsNullOrEmpty(chatMessage))
                 {
-                    string userId = User.Identity.GetUserId();
 
+                   
                     MySqlConnection conn = new MySqlConnection();
                     conn.CreateConn();
                     SqlCommand cmd = new SqlCommand("AddChatMessage", conn.Connection);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
-                    cmd.Parameters.Add(new SqlParameter("@UserId", userId));
-                    cmd.Parameters.Add(new SqlParameter("@MessageContent", chatMessage));
-                    //cmd.Parameters.Add(new SqlParameter("@DateTime", DateTime.Now));
+                    cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
+                    cmd.Parameters.Add(new SqlParameter("@MessageContent", "okay"));
+
                 
                     conn.Command = cmd;
                     conn.Command.Prepare();
                     conn.Command.ExecuteNonQuery();
+                    msgID++;
 
-                    chatModel.ChatHistory.Add(new WebApplication5.Models.ChatModel.ChatMessage { ByUser=currentUser, Message=chatMessage, When=DateTime.Now});
+                    foreach(ChatModel.ChatUser usr in chatModel.Users){
+                        SqlCommand cmd2 = new SqlCommand("AddReceivedMessage", conn.Connection);
+                        cmd2.CommandType = System.Data.CommandType.StoredProcedure;
+                        cmd2.Parameters.Add(new SqlParameter("@ReceivedUserID", usr.ChatUserID));
+                        cmd2.Parameters.Add(new SqlParameter("@MessageID", msgID));
+
+                        conn.Command = cmd2;
+                        conn.Command.Prepare();
+                        conn.Command.ExecuteNonQuery();
+
+                    }
+                    conn.CloseConn();
                 }
                 #endregion
 
-                return PartialView("ChatHistory", chatModel);
+                ChatModel userChatModel = new ChatModel(chatModel.ChatHistory);
+                //stored procedure select 
+
+                MySqlConnection selectConn = new MySqlConnection();
+                selectConn.CreateConn();
+                SqlCommand command = new SqlCommand("GetChatMessages", selectConn.Connection);
+                command.CommandType = System.Data.CommandType.StoredProcedure;
+                command.Parameters.Add(new SqlParameter("@UserID", UserID));
+                
+                 
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {   
+                    userChatModel.ChatHistory.Add(new ChatModel.ChatMessage{
+                        
+                        Message = reader.GetString(reader.GetOrdinal("MessageContent")),
+                        Username = reader.GetString(reader.GetOrdinal("UserID"))
+                    });
+                }
+
+                
+                
+                return PartialView("ChatHistory", userChatModel);
             }
         }
         catch (Exception ex)
@@ -137,7 +174,7 @@ public class ChatController : Controller
         chatModel.Users.Remove(user);
         chatModel.ChatHistory.Add(new ChatModel.ChatMessage()
         {
-            Message = "User '" + user.NickName + "' logged off.",
+            Message = "User '" + user.ChatUserID + "' logged off.",
             When = DateTime.Now
         });
     }
