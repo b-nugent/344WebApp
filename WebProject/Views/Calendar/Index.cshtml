@@ -39,7 +39,7 @@
         margin: 0;
     }
 
-    #EventStartHour, #EventStartMidday, #EventStartMinute, #EventEndHour, #EventEndMidday, #EventEndMinute {
+    #EventStartHour, #EventStartTimeframe, #EventStartMinute, #EventEndHour, #EventEndTimeframe, #EventEndMinute {
         display: inline-block;
         width: 75px;
     }
@@ -105,11 +105,6 @@
             }
         })
     }
-    /*
-    $(function () {
-        $("#date").datepicker();
-    });
-    */
 
     $(function () {
         $("#EventStartMinute").on("change", function () {
@@ -173,7 +168,7 @@
         <div class="form-group">
             @Html.Label("End Time:")
             @Html.DropDownListFor(model => model.endHourVal, new SelectList(Model.hourList, "Value", "Text"), new { @class = "form-control", id = "EventEndHour" })
-            @Html.DropDownListFor(model => model.endMinuteVal, Model.minuteList, new { @class = "form-control", id = "EventEndMinute" })
+            @Html.DropDownListFor(model => model.endMinuteVal, new SelectList(Model.minuteList, "Value", "Text"), new { @class = "form-control", id = "EventEndMinute" })
             @Html.DropDownListFor(model => model.endTimeframeVal, new SelectList(Model.timeframeList, "Value", "Text"), new { @class = "form-control", id = "EventEndTimeframe" })
             @Html.HiddenFor(model => model.endMinuteText)
             @Html.HiddenFor(model => model.endTimeframeText)
@@ -207,7 +202,7 @@
             <label for="file">Filename:</label>
               <input class="form-control" type="file" name="file" id="file" />
 
-              <input class="btn btn-primary" type="submit" />
+              <input class="btn btn-primary" type="submit" value="Upload"/>
         </div>
     }
 
