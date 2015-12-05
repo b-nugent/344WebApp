@@ -11,7 +11,6 @@
     <script src="/Scripts/jquery.validate.js"></script>
     <script src="/Scripts/Chat.js"></script>
     <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
-    <script src="/Scripts/GoogleAnalytics.js"></script>
 }
     <style type="text/css">
         /*
@@ -62,7 +61,11 @@
             color: Red;
             font-weight: bold;
             text-align: center;
+<<<<<<< HEAD
             
+=======
+            display: none;
+>>>>>>> stash
         }
         
         /*

@@ -22,14 +22,17 @@ namespace WebApplication5.Models
         {
             Users = new List<ChatUser>();
             ChatHistory = new List<ChatMessage>();
+        }
 
-            ChatHistory.Add(new ChatMessage() {
-                Message="The chat server started at " + DateTime.Now });
+        public ChatModel(List<ChatMessage> ChatHistory): this()
+        {
+            this.ChatHistory.AddRange(ChatHistory);
         }
 
         public class ChatUser
         {
-            public string NickName;
+            public string ChatUserID;
+            public string Name;
             public DateTime LoggedOnTime;
             public DateTime LastPing;
         }
@@ -39,10 +42,7 @@ namespace WebApplication5.Models
             /// <summary>
             /// If null, the message is from the server
             /// </summary>
-            public ChatUser ByUser;
-
-            public DateTime When = DateTime.Now;
-
+            public String Username;
             public string Message = "";
 
         }

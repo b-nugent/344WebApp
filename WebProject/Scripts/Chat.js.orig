@@ -6,7 +6,7 @@
         var nickName = $("#txtNickName").val();
         if (nickName) {
             //call the Index method of the controller and pass the attribute "logOn"
-            var href = "/Chat/Index?user=" + encodeURIComponent(nickName);
+            var href = "/Home/?user=" + encodeURIComponent(nickName);
             href = href + "&logOn=true";
             $("#LoginButton").attr("href", href).click();
 

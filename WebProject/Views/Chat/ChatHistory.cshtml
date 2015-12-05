@@ -1,20 +1,19 @@
 ﻿@model WebApplication5.Models.ChatModel
-<div id="Lobby">
-    <p>
-        <b>@Model.Users.Count online users</b></p>
+<div class="col-md-3" id="Lobby">
+    <p><b>@Model.Users.Count online users</b></p>
     @foreach (WebApplication5.Models.ChatModel.ChatUser user in Model.Users)
     {
-        @user.NickName<br />
+        @user.Name<br />
     }
 </div>
-<div id="ChatHistory">
+<div class="col-md-9" id="ChatHistory">
     @foreach (WebApplication5.Models.ChatModel.ChatMessage msg in Model.ChatHistory)
     {
         <p>
-            <i>@msg.When</i><br />
-            @if (msg.ByUser != null)
+           
+            @if (msg.Username != null)
             {
-                <b>@(msg.ByUser.NickName + ":")</b> @msg.Message
+                <b>@(msg.Username + ":")</b> @msg.Message
             }
             else
             {

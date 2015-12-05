@@ -3,38 +3,8 @@
     ViewBag.Title = "Lobby";
 }
 <style type="text/css">
-    #Lobby
-    {
-        position: absolute;
-        width: 25%;
-        left: 1%;
-        height: 50%;
-        top: 60%;
-        background-color: #D8D8D8;
-        text-align: left;
-    }
-    
-    #ChatHistory
-    {
-        position: absolute;
-        width: 50%;
-        left: 27%;
-        height: 30%;
-        top: 60%;
-        bottom: 11%;
-        background-color: #D8D8D8;
-        text-align: left;
-        font-size: x-small;
-        overflow-y: scroll;
-    }
-    
     #Speak
     {
-        position: absolute;
-        width: 50%;
-        left: 27%;
-        height: 9%;
-        top: 90%;
         min-height: 60px;
         background: #B8ED01;
         border: 1px solid rgba(0,0,0,0.15);
@@ -45,29 +15,56 @@
         text-shadow: 0 1px rgba(255,255,255,0.7);
         vertical-align: middle;
     }
+    
+    #Lobby
+    {
+        background-color: #D8D8D8;
+        text-align: left;
+        height:150px;
+        max-height:150px;
+        overflow-y: scroll;
+    }
+
+    #ChatHistory {
+        height:150px;
+        max-height:150px;
+        overflow-y: scroll;
+        background-color: #D8D8D8;
+        text-align: left;
+        font-size: x-small;
+    }
+
 </style>
-<div id="RefreshArea">
+<div class="row">
+    <div id="RefreshArea">
     @{
         Html.RenderPartial("ChatHistory", Model);
     }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div id="Speak">
+        speak
+        <table>
+            <tr>
+                <td rowspan="2">
+                    <textarea id="txtSpeak" rows="3"></textarea>
+                </td>
+                <td>
+                    <button id="btnSpeak" value="Speak" style="font-weight: bold;">
+                        Speak</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="btnLogOff" value="LogOff">
+                        LogOff</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+    </div>
 </div>
 @Ajax.ActionLink("ActionLink", "Index", new { user = "", logOn="",logOff="",chatMessage = "" }, new AjaxOptions { UpdateTargetId = "RefreshArea", OnSuccess = "ChatOnSuccess", OnFailure = "ChatOnFailure" }, new { @id = "ActionLink", @style = "visibility:hidden;" })
-<div id="Speak">
-    <table border="0" width="100%">
-        <tr>
-            <td rowspan="2">
-                <textarea id="txtSpeak" style="width: 100%" rows="3"></textarea>
-            </td>
-            <td>
-                <button id="btnSpeak" value="Speak" style="font-weight: bold; width: 80px">
-                    Speak</button>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <button id="btnLogOff" value="LogOff" style="width: 80px">
-                    LogOff</button>
-            </td>
-        </tr>
-    </table>
-</div>
+
