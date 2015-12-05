@@ -99,7 +99,6 @@ public class ChatController : Controller
                 #region if there is a new message, append it to the chat
                 if (!string.IsNullOrEmpty(chatMessage))
                 {
-                    
                     string userId = User.Identity.GetUserId();
 
                     MySqlConnection conn = new MySqlConnection();
@@ -107,12 +106,14 @@ public class ChatController : Controller
                     SqlCommand cmd = new SqlCommand("AddChatMessage", conn.Connection);
                     cmd.CommandType = System.Data.CommandType.StoredProcedure;
                     cmd.Parameters.Add(new SqlParameter("@UserId", userId));
-                    cmd.Parameters.Add(new SqlParameter("@Message", chatMessage));
-                    cmd.Parameters.Add(new SqlParameter("@DateTime", DateTime.Now));
+                    cmd.Parameters.Add(new SqlParameter("@MessageContent", chatMessage));
+                    //cmd.Parameters.Add(new SqlParameter("@DateTime", DateTime.Now));
                 
                     conn.Command = cmd;
                     conn.Command.Prepare();
                     conn.Command.ExecuteNonQuery();
+
+                    chatModel.ChatHistory.Add(new WebApplication5.Models.ChatModel.ChatMessage { ByUser=currentUser, Message=chatMessage, When=DateTime.Now});
                 }
                 #endregion
 

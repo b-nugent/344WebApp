@@ -183,6 +183,14 @@
         </div>
     }
 
+    @if(! ViewData.ModelState.IsValidField("Upload"))
+    {
+        <div class="alert alert-danger">
+            @ViewData.ModelState["Upload"].Errors[0]
+        </div>
+    }
+
+    
     @using (Html.BeginForm("UploadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" }))
     {
         <div class="form-group">

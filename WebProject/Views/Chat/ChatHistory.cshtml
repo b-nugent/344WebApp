@@ -1,13 +1,12 @@
 ﻿@model WebApplication5.Models.ChatModel
-<div id="Lobby">
-    <p>
-        <b>@Model.Users.Count online users</b></p>
+<div class="col-md-3" id="Lobby">
+    <p><b>@Model.Users.Count online users</b></p>
     @foreach (WebApplication5.Models.ChatModel.ChatUser user in Model.Users)
     {
         @user.NickName<br />
     }
 </div>
-<div id="ChatHistory">
+<div class="col-md-9" id="ChatHistory">
     @foreach (WebApplication5.Models.ChatModel.ChatMessage msg in Model.ChatHistory)
     {
         <p>

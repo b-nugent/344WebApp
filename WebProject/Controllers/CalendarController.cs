@@ -49,14 +49,27 @@ namespace WebApplication5.Controllers {
 
                 string json = Encoding.ASCII.GetString(fileContents);
 
-                List<EventModel> events = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EventModel>>(json);
-                foreach(EventModel e in events) 
+                try
                 {
-                    InsertEvent(e.Name, e.Description,Convert.ToDateTime(e.DateFrom),Convert.ToDateTime(e.DateTo));
+                    List<EventModel> events = Newtonsoft.Json.JsonConvert.DeserializeObject<List<EventModel>>(json);
+                    foreach (EventModel e in events)
+                    {
+                        InsertEvent(e.Name, e.Description, Convert.ToDateTime(e.DateFrom), Convert.ToDateTime(e.DateTo));
+                    }
                 }
+                catch (Newtonsoft.Json.JsonReaderException ex)
+                {
+                    ModelState.AddModelError("Upload", "Please upload a valid JSON file.");
+                }
+
+            }
+            else
+            {
+                ModelState.AddModelError("Upload", "File has no content.");
             }
 
-            return RedirectToAction("Index");
+            
+            return RedirectToAction("Index", new { uniqueUri = Request.RequestContext.RouteData.Values["uniqueUri"] });
         }
 
         private void InsertEvent(string EventName, string EventDescription, DateTime EventStart, DateTime EventEnd)
