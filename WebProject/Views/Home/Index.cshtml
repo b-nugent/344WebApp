@@ -1,4 +1,5 @@
-﻿@model WebApplication5.Models.UserPostsModels
+﻿@using Microsoft.AspNet.Identity;
+@model WebApplication5.Models.UserPostsModels
 @{
     ViewBag.Title = "Home Page";
 }
@@ -129,21 +130,19 @@
 
 <div class="row">
     <div class="col-md-6">
-        <div id="YourNickname" style="display:none">
-        </div>
-        <div id="LastRefresh">
-        </div>
-        <div id="container">
-            <div class="box" id="LoginPanel">
-                Nick name :
-                <input type="text" id="txtNickName" />
-                <button id="btnLogin" value="Start">
-                    Start</button>
-            </div>
-        </div>
-        <div id="Error">
-        </div>
-        @Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
+        @{
+            if(User.Identity.GetUserId() == null){
+                <div class="alert alert-info">
+                    Please log in to Facebook to access chat features.
+                </div>
+            }
+            else {
+                @Html.Action("Index", "Chat", new { logOn = true })
+                //@Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
+            }
+        }
+        
+       
     </div>
 
     @{

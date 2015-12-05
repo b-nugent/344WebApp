@@ -12,12 +12,13 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[AddChatMessage]
 	@UserId nvarchar(128),
-	@MessageContent nvarchar(300)
+	@MessageContent nvarchar(300),
+	@TimeReceived datetime
 
 AS
 BEGIN
 	SET NOCOUNT ON;
 
-    INSERT INTO [dbo].[ChatHistory] (UserID, MessageContent)
-    VALUES (@UserId, @MessageContent); 
+    INSERT INTO [dbo].[ChatHistory] (UserID, MessageContent, TimeReceived)
+    VALUES (@UserId, @MessageContent, @TimeReceived); 
 END
