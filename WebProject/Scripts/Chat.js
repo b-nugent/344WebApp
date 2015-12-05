@@ -63,11 +63,11 @@ function LoginOnSuccess(result) {
     $("#btnLogOff").click(function () {
 
         //call the Index method of the controller and pass the attribute "logOff"
-        var href = "/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
+        var href = "/?user=" + encodeURIComponent($("#YourNickname").text());
         href = href + "&logOff=true";
         $("#ActionLink").attr("href", href).click();
 
-        document.location.href = "Chat/Index";
+        document.location.href = "/";
     });
 
 }
