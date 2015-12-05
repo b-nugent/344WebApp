@@ -1,0 +1,191 @@
+﻿@model WebApplication5.Models.UserPostsModels
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@section JavaScript{
+    <script src='/Scripts/jquery.min.js'></script>
+    <script src="/Scripts/jquery=1.7.1.js"></script>
+    <script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script src="/Scripts/jquery-ui-1.8.20.js"></script>
+    <script src="/Scripts/jquery.validate.js"></script>
+    <script src="/Scripts/Chat.js"></script>
+    <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
+}
+    <style type="text/css">
+        /*
+        body, html
+        {
+            height: 100%;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow:hidden;
+        }
+        */
+        div, body, table, p
+        {
+            font-family: Verdana;
+            font-size: medium;
+        }
+        
+        /*
+        #container
+        {
+            top: 10%;
+            left: 10%;
+            min-width: 320px;
+
+        }
+        */
+        .box
+        {
+            margin: 10px;
+            padding: 8px 15px;
+            background: #B8ED01;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            transition: all 0.3s ease-out;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), 0 2px 2px rgba(0,0,0,0.3), 0 0 4px 1px rgba(0,0,0,0.2); /* Font styles */
+            text-decoration: none;
+            text-shadow: 0 1px rgba(255,255,255,0.7);
+        }
+        
+        #Error
+        {
+            width: 80%;
+            left: 10%;
+            position: absolute;
+            height: 10%;
+            top: 91%;
+            color: Red;
+            font-weight: bold;
+            text-align: center;
+<<<<<<< HEAD
+            
+=======
+            display: none;
+>>>>>>> stash
+        }
+        
+        /*
+        #LastRefresh
+        {
+            display: inline;
+            position: absolute;
+            font-size: xx-small;
+            text-align: right;
+            top: 7%;
+            left: 10%;
+            width: 80%;
+        }
+        #YourNickname
+        {
+            visibility: hidden;
+            display: inline;
+            position: absolute;
+            font-size: medium;
+            font-weight: bold;
+            text-align: left;
+            top: 7%;
+            left: 10%;
+            width: 50%;
+        }
+*/
+      #topstocks{ width: 40%; border: 1px solid gray; padding: 5px; height: auto; overflow: auto; }
+</style>
+
+<div class="row">
+    <div class="stockcontainer col-md-4">
+        <h2>Top 5 Stocks</h2>
+        <div class="topstocks" id="topstocks">
+        </div>
+    </div>
+
+    <div class="dailyEvents col-md-4">
+        <h2>Today's Events</h2>
+    </div>
+
+    <div class="col-md-4">
+        @{
+            if(Model.posts != null) {
+                <h2>Update Facebook Status</h2>
+                using (Html.BeginForm("UpdateStatus", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+                {
+                    <div class="form-group">
+                        @Html.TextArea("status", new { @class = "form-control col-md-12", rows = 3, cols = 80 })
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-primary" value="Update" />
+                    </div>
+                }
+            } 
+            else {
+                <div class="alert alert-info" style="margin-top: 20px">
+                    Please log in to access Facebook features.
+                </div>
+            }
+        }
+    </div>
+    
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div id="YourNickname" style="display:none">
+        </div>
+        <div id="LastRefresh">
+        </div>
+        <div id="container">
+            <div class="box" id="LoginPanel">
+                Nick name :
+                <input type="text" id="txtNickName" />
+                <button id="btnLogin" value="Start">
+                    Start</button>
+            </div>
+        </div>
+        <div id="Error">
+        </div>
+        @Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
+    </div>
+
+    @{
+        if (Model.posts != null)
+        {
+            <div class="col-md-6" style="">
+                <h2>Recent Facebook Posts</h2>
+                @foreach (var post in Model.posts)
+                {
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <small>@post.createdTime</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @post.message
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+
+<script type='text/javascript'>
+    function cback(o){   
+        var items = o.query.results.quote;
+        var output = '';
+        var num_items = o.query.count;
+        for(var i = 0; i<num_items; i++){
+            output += '<h5>' + items[i].symbol + ' ' + items[i].Name + ' ' + items[i].LastTradePriceOnly + ' ' + items[i].Change + '%' + '</h5>';
+        }
+        document.getElementById('topstocks').innerHTML = output;
+    }
+</script>
+
+<script src='https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22YHOO%22%2C%20%22MSFT%22%2C%20%22GOOG%22%2C%20%22AAPL%22%2C%20%22XOM%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=cback'></script>
+    

@@ -3,7 +3,7 @@
     <p><b>@Model.Users.Count online users</b></p>
     @foreach (WebApplication5.Models.ChatModel.ChatUser user in Model.Users)
     {
-        @user.NickName<br />
+        @user.Name<br />
     }
 </div>
 <div class="col-md-9" id="ChatHistory">
@@ -11,9 +11,9 @@
     {
         <p>
             <i>@msg.When</i><br />
-            @if (msg.ByUser != null)
+            @if (msg.Username != null)
             {
-                <b>@(msg.ByUser.NickName + ":")</b> @msg.Message
+                <b>@(msg.Username + ":")</b> @msg.Message
             }
             else
             {
