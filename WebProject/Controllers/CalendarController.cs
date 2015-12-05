@@ -33,7 +33,12 @@ namespace WebApplication5.Controllers {
         public ActionResult TranslateEventTime(CalendarModel c, string EventName, string EventDescription, string EventStart, string EventEnd) {
             // Translating user input into evant start datetime variable
             int startHour = c.startHourVal;
-            string startHourText = startHour.ToString();
+            string startHourText;
+            if (startHour.ToString().Length == 1) {
+                startHourText = "0" + startHour.ToString();
+            } else {
+                startHourText = startHour.ToString();
+            }
             if (c.startTimeframeText == null) {
                 c.startTimeframeText = "AM";
             }
@@ -47,9 +52,6 @@ namespace WebApplication5.Controllers {
             if (startHour == 12 && c.startTimeframeText == "AM") {
                 startHourText = "00";
             }
-            if (startHour.GetType() == typeof(int)) {
-                startHour.ToString();
-            }
             var startTime = startHourText + ":" + c.startMinuteText + ":00";
             startTime = EventStart + " " + startTime;
             DateTime dtStart = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
@@ -57,7 +59,12 @@ namespace WebApplication5.Controllers {
 
             // Translating user input into evant end datetime variable
             int endHour = c.endHourVal;
-            string endHourText = startHour.ToString();
+            string endHourText;
+            if (endHour.ToString().Length == 1) {
+                endHourText = "0" + endHour.ToString();
+            } else {
+                endHourText = endHour.ToString();
+            }
             if (c.endTimeframeText == null) {
                 c.endTimeframeText = "AM";
             }
@@ -70,9 +77,6 @@ namespace WebApplication5.Controllers {
             }
             if (endHour == 12 && c.endTimeframeText == "AM") {
                 endHourText = "00";
-            }
-            if (endHour.GetType() == typeof(int)) {
-                endHour.ToString();
             }
             var endTime = endHourText + ":" + c.endMinuteText + ":00";
             endTime = EventEnd + " " + endTime;
