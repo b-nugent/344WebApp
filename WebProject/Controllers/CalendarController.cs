@@ -8,6 +8,7 @@ using WebApplication5.App_Data;
 using System.Data.SqlClient;
 using WebApplication5.Models;
 using System.Text;
+using System.Globalization;
 
 namespace WebApplication5.Controllers {
     public class CalendarController : Controller {
@@ -15,12 +16,69 @@ namespace WebApplication5.Controllers {
         // GET: /Calendar/
         public ActionResult Index() {
             ViewBag.Message = "Calendar";
-            return View();
+            CalendarModel c = new CalendarModel();
+            c.populateLists();
+            return View(c);
         }
-        
-        public ActionResult StoreEvent(string EventName, string EventDescription, DateTime EventStart, DateTime EventEnd) {
-            InsertEvent(EventName, EventDescription, EventStart, EventEnd);
 
+        /// <summary>
+        /// Translates the various time forms from the view into two DateTime variables, the data then gets passed to the InsertEvent function.
+        /// </summary>
+        /// <param name="c"></param>
+        /// <param name="EventName"></param>
+        /// <param name="EventDescription"></param>
+        /// <param name="EventStart"></param>
+        /// <param name="EventEnd"></param>
+        /// <returns></returns>
+        public ActionResult TranslateEventTime(CalendarModel c, string EventName, string EventDescription, string EventStart, string EventEnd) {
+            // Translating user input into evant start datetime variable
+            int startHour = c.startHourVal;
+            string startHourText = startHour.ToString();
+            if (c.startTimeframeText == null) {
+                c.startTimeframeText = "AM";
+            }
+            if (c.startMinuteText == null) {
+                c.startMinuteText = "00";
+            }
+            if (c.startTimeframeText == "PM" && startHour != 12) {
+                startHour += 12;
+                startHourText = startHour.ToString();
+            }
+            if (startHour == 12 && c.startTimeframeText == "AM") {
+                startHourText = "00";
+            }
+            if (startHour.GetType() == typeof(int)) {
+                startHour.ToString();
+            }
+            var startTime = startHourText + ":" + c.startMinuteText + ":00";
+            startTime = EventStart + " " + startTime;
+            DateTime dtStart = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
+
+
+            // Translating user input into evant end datetime variable
+            int endHour = c.endHourVal;
+            string endHourText = startHour.ToString();
+            if (c.endTimeframeText == null) {
+                c.endTimeframeText = "AM";
+            }
+            if (c.endMinuteText == null) {
+                c.endMinuteText = "00";
+            }
+            if (c.endTimeframeText == "PM" && endHour != 12) {
+                endHour += 12;
+                endHourText = endHour.ToString();
+            }
+            if (endHour == 12 && c.endTimeframeText == "AM") {
+                endHourText = "00";
+            }
+            if (endHour.GetType() == typeof(int)) {
+                endHour.ToString();
+            }
+            var endTime = endHourText + ":" + c.endMinuteText + ":00";
+            endTime = EventEnd + " " + endTime;
+            DateTime dtEnd = DateTime.ParseExact(endTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
+
+            InsertEvent(EventName, EventDescription, dtStart, dtEnd);
             return RedirectToAction("Index");
         }
 
@@ -72,7 +130,7 @@ namespace WebApplication5.Controllers {
             return RedirectToAction("Index", new { uniqueUri = Request.RequestContext.RouteData.Values["uniqueUri"] });
         }
 
-        private void InsertEvent(string EventName, string EventDescription, DateTime EventStart, DateTime EventEnd)
+        private void InsertEvent(string EventName, string EventDescription, DateTime dtStart, DateTime dtEnd)
         {
             string UserID = User.Identity.GetUserId();
             if (UserID != null)
@@ -85,8 +143,8 @@ namespace WebApplication5.Controllers {
                 cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
                 cmd.Parameters.Add(new SqlParameter("@EventName", EventName));
                 cmd.Parameters.Add(new SqlParameter("@EventDescription", EventDescription));
-                cmd.Parameters.Add(new SqlParameter("@EventStart", EventStart));
-                cmd.Parameters.Add(new SqlParameter("@EventEnd", EventEnd));
+                cmd.Parameters.Add(new SqlParameter("@EventStart", dtStart));
+                cmd.Parameters.Add(new SqlParameter("@EventEnd", dtEnd));
 
                 db.Command = cmd;
                 db.Command.Prepare();

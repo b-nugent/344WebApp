@@ -1,4 +1,6 @@
-﻿@{  
+﻿@model WebApplication5.Models.CalendarModel
+
+@{  
     ViewBag.Title = "Calendar";
 }
 
@@ -30,10 +32,16 @@
 
     #EventName, #EventDescription, #EventStart, #EventEnd {
         height: 35px;
+        width: 232px;
         display: block;
         vertical-align: middle;
         padding: 0 10px 0 10px;
         margin: 0;
+    }
+
+    #EventStartHour, #EventStartMidday, #EventStartMinute, #EventEndHour, #EventEndMidday, #EventEndMinute {
+        display: inline-block;
+        width: 75px;
     }
 
     #createEventButton {
@@ -82,7 +90,7 @@
                         window.scrollTo(0, 0);
                     },
 
-                    editable: true,
+                    editable: false,
 
                     events:$.map(data, function(item, i) {
                         var event = new Object();
@@ -97,36 +105,37 @@
             }
         })
     }
-
+    /*
     $(function () {
         $("#date").datepicker();
     });
+    */
 
     $(function () {
-        $("#createEventButton").click(function () {
-            var newEvent = {
-                title: $("#EventName").val(),
-                description: $("#EventDescription").val(),
-                start: $("#EventStart").val(),
-                end: $("#EventEnd").val(),
-                allDay: false
-            };
-            /*
-            $.ajax({
-                method: "POST",
-                url: "CalendarController.cs",
-                data: newEvent,
-                success: function (html) {
-                    alert('YOU DID IT!');
-                }
-
-            });
-            */
-            $('#createEvent').hide();
-            $('#calendar').fullCalendar('renderEvent', newEvent, true);
-            
+        $("#EventStartMinute").on("change", function () {
+            $("#startMinuteText").val($("#EventStartMinute option:selected").text());
         });
     });
+
+    $(function () {
+        $("#EventStartTimeframe").on("change", function () {
+            $("#startTimeframeText").val($("#EventStartTimeframe option:selected").text());
+        });
+    });
+
+    $(function () {
+        $("#EventEndMinute").on("change", function () {
+            $("#endMinuteText").val($("#EventEndMinute option:selected").text());
+        });
+    });
+
+    $(function () {
+        $("#EventEndTimeframe").on("change", function () {
+            $("#endTimeframeText").val($("#EventEndTimeframe option:selected").text());
+        });
+    });
+
+   
 </script>
 
 <!-- Displays the message from the Home Controller -->
@@ -134,8 +143,7 @@
 
 <!-- This is where the event creation forms will appear -->
 <div id="createEvent">
-    @using (Html.BeginForm("StoreEvent", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
-    {
+    @using (Html.BeginForm("TranslateEventTime", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
         <div class="form-group">
             @Html.Label("Event Name:")
             @Html.TextArea("EventName", new { @class = "form-control", id = "EventName" })
@@ -145,35 +153,37 @@
             @Html.TextArea("EventDescription", new { @class = "form-control", id = "EventDescription" })
         </div>
         <div class="form-group">
-            @Html.Label("Start Time:")
+            @Html.Label("Start Date:")
             @Html.TextArea("EventStart", new { @class = "form-control", id = "EventStart" })
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Start Time:")
+            @Html.DropDownListFor(model => model.startHourVal, new SelectList(Model.hourList, "Value", "Text"), new { @class = "form-control", id = "EventStartHour" })
+            @Html.DropDownListFor(model => model.startMinuteVal, new SelectList(Model.minuteList, "Value", "Text"), new { @class = "form-control", id = "EventStartMinute" })
+            @Html.DropDownListFor(model => model.startTimeframeVal, new SelectList(Model.timeframeList, "Value", "Text"), new { @class = "form-control", id = "EventStartTimeframe" })
+            @Html.HiddenFor(model => model.startMinuteText)
+            @Html.HiddenFor(model => model.startTimeframeText)
+        </div>
+
+        <div class="form-group">
+            @Html.Label("End Date:")
+            @Html.TextArea("EventEnd", new { @class = "form-control", id = "EventEnd" })
         </div>
         <div class="form-group">
             @Html.Label("End Time:")
-            @Html.TextArea("EventEnd", new { @class = "form-control", id = "EventEnd" })
+            @Html.DropDownListFor(model => model.endHourVal, new SelectList(Model.hourList, "Value", "Text"), new { @class = "form-control", id = "EventEndHour" })
+            @Html.DropDownListFor(model => model.endMinuteVal, Model.minuteList, new { @class = "form-control", id = "EventEndMinute" })
+            @Html.DropDownListFor(model => model.endTimeframeVal, new SelectList(Model.timeframeList, "Value", "Text"), new { @class = "form-control", id = "EventEndTimeframe" })
+            @Html.HiddenFor(model => model.endMinuteText)
+            @Html.HiddenFor(model => model.endTimeframeText)
         </div>
+       
         <div class="form-group">
             <input id="createEventButton" type="submit" class="btn btn-primary" value="Create" />
         </div>
 
     }
-    <!--
-    <form method="post" action="">
-        <label for="#EventName">Title:</label>
-        <input id="EventName" name="EventName" type="text" value=""><br>
-        
-        <label for="#EventDescription">Description:</label>
-        <input id="EventDescription" name="EventDescription" type="text" value=""><br>
-        
-        <label for="#EventStart">Start:</label>
-        <input id="EventStart" name="EventStart" type="text" value=""><br>
-        
-        <label for="#EventEnd">End:</label>
-        <input id="EventEnd" name="EventEnd" type="text" value=""><br>
-        
-        <input id="createEventButton" type="submit" value="Create">
-    </form>
-        -->
 </div>
 <div>
     @using (Html.BeginForm("DownloadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
