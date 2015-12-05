@@ -10,7 +10,7 @@
     @foreach (WebApplication5.Models.ChatModel.ChatMessage msg in Model.ChatHistory)
     {
         <p>
-            <i>@msg.When</i><br />
+           
             @if (msg.Username != null)
             {
                 <b>@(msg.Username + ":")</b> @msg.Message

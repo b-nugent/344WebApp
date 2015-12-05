@@ -14,7 +14,7 @@ public class ChatController : Controller
 {
     static ChatModel chatModel;
     private Object myLock = new Object();
-    int msgID = 0;
+    int msgID = 1;
     /// <summary>
     /// When the method is called with no arguments, just return the view
     /// When argument logOn is true, a user logged on
@@ -28,10 +28,6 @@ public class ChatController : Controller
         try
         {
             if (chatModel == null) chatModel = new ChatModel();
-                
-            //trim chat history if needed
-            if (chatModel.ChatHistory.Count > 100)
-                chatModel.ChatHistory.RemoveRange(0, 90);
 
             if (!Request.IsAjaxRequest())
             {
@@ -41,9 +37,9 @@ public class ChatController : Controller
             else if (logOn != null && (bool)logOn)
             {
                 //check if nickname already exists
-                if (chatModel.Users.FirstOrDefault(u => u.ChatUserID == user) != null)
+                if (chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId()) != null)
                 {
-                    throw new Exception("This nickname already exists");
+                    throw new Exception("You are already logged into chat");
                 }
                 
                 else
@@ -57,12 +53,7 @@ public class ChatController : Controller
                         LastPing = DateTime.Now
                     });
 
-                    //inform lobby of new user
-                    chatModel.ChatHistory.Add(new ChatModel.ChatMessage()
-                    {
-                        Message = "User '" + User.Identity.GetUserName() + "' logged on.",
-                        When = DateTime.Now
-                    });
+                    
                     #endregion
 
                 }
@@ -112,7 +103,7 @@ public class ChatController : Controller
                     conn.Command = cmd;
                     conn.Command.Prepare();
                     conn.Command.ExecuteNonQuery();
-                    msgID++;
+                    
 
                     foreach(ChatModel.ChatUser usr in chatModel.Users){
                         SqlCommand cmd2 = new SqlCommand("AddReceivedMessage", conn.Connection);
@@ -126,6 +117,7 @@ public class ChatController : Controller
 
                     }
                     conn.CloseConn();
+
                     }
                 }
                 #endregion
@@ -138,15 +130,18 @@ public class ChatController : Controller
                 SqlCommand command = new SqlCommand("GetChatMessages", selectConn.Connection);
                 command.CommandType = System.Data.CommandType.StoredProcedure;
                 command.Parameters.Add(new SqlParameter("@UserID", UserID));
-                
-                 
+
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
-                {   
+                {
+                    ChatModel.ChatUser msgSender;
+                    string username = reader.GetString(reader.GetOrdinal("UserID")); 
+                    msgSender = chatModel.Users.FirstOrDefault(u => u.ChatUserID == username); 
+                    username = msgSender.Name;
                     userChatModel.ChatHistory.Add(new ChatModel.ChatMessage{
                         
                         Message = reader.GetString(reader.GetOrdinal("MessageContent")),
-                        Username = reader.GetString(reader.GetOrdinal("UserID"))
+                        Username = username
                     });
                 }
 
@@ -162,17 +157,12 @@ public class ChatController : Controller
     }
 
     /// <summary>
-    /// Remove this user from the lobby and inform others that he logged off
+    /// Remove this user from the lobby
     /// </summary>
     /// <param name="user"></param>
     public void LogOffUser(ChatModel.ChatUser user)
     {
         chatModel.Users.Remove(user);
-        chatModel.ChatHistory.Add(new ChatModel.ChatMessage()
-        {
-            Message = "User '" + user.Name + "' logged off.",
-            When = DateTime.Now
-        });
     }
 
 }

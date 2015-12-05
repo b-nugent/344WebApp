@@ -43,7 +43,6 @@ namespace WebApplication5.Models
             /// If null, the message is from the server
             /// </summary>
             public String Username;
-            public DateTime When = DateTime.Now;
             public string Message = "";
 
         }
