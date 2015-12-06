@@ -1,27 +1,8 @@
 ﻿$(document).ready(function () {
 
-    $("#txtNickName").val("").focus();
-
-    $("#btnLogin").click(function () {
-        var nickName = $("#txtNickName").val();
-        if (nickName) {
-            //call the Index method of the controller and pass the attribute "logOn"
-            var href = "/Chat/Index?user=" + encodeURIComponent(nickName);
-            href = href + "&logOn=true";
-            $("#LoginButton").attr("href", href).click();
-
-            //the nickname is persisted here
-            $("#YourNickname").text(nickName);
-        }
-    });
-
-    //auto click when enter is pressed
-    $('#txtNickName').keydown(function (e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            $("#btnLogin").click();
-        }
-    })
+    var href = "/Chat/Index?";
+    href = href + "&logOn=true";
+    $("#LoginButton").attr("href", href).click();
 
 });
 

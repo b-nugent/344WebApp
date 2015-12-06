@@ -21,7 +21,7 @@ public class ChatController : Controller
     /// When argument logOff is true, a user closed their browser or navigated away (log off)
     /// When argument chatMessage is specified, the user typed something in the chat
     /// </summary>
-    public ActionResult Index(string user,bool? logOn, bool? logOff, string chatMessage)
+    public ActionResult Index(bool? logOn, bool? logOff, string chatMessage)
     {
         string UserID = User.Identity.GetUserId();
 

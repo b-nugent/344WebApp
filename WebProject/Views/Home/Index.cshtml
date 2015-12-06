@@ -65,31 +65,6 @@
             text-align: center;
             
         }
-        
-        /*
-        #LastRefresh
-        {
-            display: inline;
-            position: absolute;
-            font-size: xx-small;
-            text-align: right;
-            top: 7%;
-            left: 10%;
-            width: 80%;
-        }
-        #YourNickname
-        {
-            visibility: hidden;
-            display: inline;
-            position: absolute;
-            font-size: medium;
-            font-weight: bold;
-            text-align: left;
-            top: 7%;
-            left: 10%;
-            width: 50%;
-        }
-*/
       #topstocks{ width: 40%; border: 1px solid gray; padding: 5px; height: auto; overflow: auto; }
 </style>
 
@@ -131,14 +106,22 @@
 <div class="row">
     <div class="col-md-6">
         @{
-            if(User.Identity.GetUserId() == null || Model.posts == null){
+            if(User.Identity.GetUserId() == null){
                 <div class="alert alert-info">
-                    Please log in through Facebook to access chat features.
+                    Please log in through Facebook to use chat features.
                 </div>
             }
             else {
-                @Html.Action("Index", "Chat", new { logOn = true })
-                //@Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
+                <div id="YourNickname" style="display:none">
+                </div>
+                <div id="LastRefresh">
+                </div>
+                <div id="container">
+                    
+                </div>
+                <div id="Error">
+                </div>
+                @Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
             }
         }
         

@@ -90,24 +90,20 @@
     </style>
 </head>
 <body>
-    
-            <div id="YourNickname">
-            </div>
-            <div id="LastRefresh">
-            </div>
-            <div id="container">
-                <div class="box" id="LoginPanel">
-                    Nick name :
-                    <input type="text" id="txtNickName" />
-                    <button id="btnLogin" value="Start">
-                        Start</button>
-                </div>
-            </div>
-            <div id="Error" style="display:none" >
-            </div>
-            @Ajax.ActionLink("Login", "Index", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
-        }
-    
-    
+    <div id="YourNickname">
+    </div>
+    <div id="LastRefresh">
+    </div>
+    <div id="container">
+        <div class="box" id="LoginPanel">
+            Nick name :
+            <input type="text" id="txtNickName" />
+            <button id="btnLogin" value="Start">
+                Start</button>
+        </div>
+    </div>
+    <div id="Error" style="display:none" >
+    </div>
+    @Ajax.ActionLink("Login", "Index", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
 </body>
 </html>
