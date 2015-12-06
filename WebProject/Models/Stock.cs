@@ -3,7 +3,7 @@
 /// <summary>
 /// Summary description for Class1
 /// </summary>
-namespace StockDescription{
+namespace WebApplication5.Models{
 
     public class Stock
     {

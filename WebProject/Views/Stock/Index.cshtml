@@ -1,6 +1,9 @@
 ﻿@{
     ViewBag.Title = "Stock";
+    WebApplication5.Models.Stock StockNote = new WebApplication5.Models.Stock();
 }
+
+@model WebApplication5.Models.Stock
 
 <style>
 #stockField{
@@ -39,26 +42,10 @@
         }
     </div>
 
-        <div class="col-md-8">
-        @using (Html.BeginForm("GetNote", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
-        {
-            <div class ="stockNote form-group" id="stockNote">
-                <div class="form-group">
-                    @Html.TextBox("stock", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Ticker" })
-                </div>
-                <div class="form-group">
-                    @Html.TextArea("note", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Note"})
-                </div>
-            
-                <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Update" />
-                </div>
-            </div>
-        }
-    </div>
 
 </div>
 
+@Html.Partial("GetNote", StockNote)
 
 <div class="stockInfo" id="stockInfo">
 </div>
