@@ -96,6 +96,29 @@ namespace WebApplication5.Controllers {
             return Json(events, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult DeleteEvent(string EventName, string EventDescription, string EventStart, string EventEnd) {
+
+            string UserID = User.Identity.GetUserId();
+            if (UserID != null) {
+                MySqlConnection db = new MySqlConnection();
+                db.CreateConn();
+
+                SqlCommand cmd = new SqlCommand("DeleteCalendarEvent", db.Connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
+                cmd.Parameters.Add(new SqlParameter("@EventName", EventName));
+                cmd.Parameters.Add(new SqlParameter("@EventDescription", EventDescription));
+                cmd.Parameters.Add(new SqlParameter("@EventStart", EventEnd));
+                cmd.Parameters.Add(new SqlParameter("@EventEnd", EventStart));
+
+                db.Command = cmd;
+                db.Command.Prepare();
+                db.Command.ExecuteNonQuery();
+            }
+            
+            return RedirectToAction("Index");
+        }
+
         public ActionResult DownloadEvents()
         {
             List<EventModel> events = QueryEvents();

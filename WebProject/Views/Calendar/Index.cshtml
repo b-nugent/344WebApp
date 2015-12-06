@@ -69,12 +69,12 @@
 
     #modalClose {
         display: inline-block;
-        float: left;
+        float: right;
     }
 
     #modalDelete {
         display: inline-block;
-        float: right;
+        float: left;
     }
 
 </style>
@@ -262,8 +262,12 @@
                 <b>Description: </b><span id="description"></span><br>
             </div>
             <div class="modal-footer">
-                <button id="modalClose" type="button" class="btn btn-danger">Delete</button>
-                <button id="modalDelete" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                @using (Html.BeginForm("DeleteEvent", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+                    <div class="form-group">
+                        <input id="modalDelete" type="submit" class="btn btn-danger" value="Delete"/>
+                    </div>
+                }
+                <button id="modalClose" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
