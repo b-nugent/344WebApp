@@ -65,49 +65,42 @@
             text-align: center;
             
         }
-      #topstocks{ width: 40%; border: 1px solid gray; padding: 5px; height: auto; overflow: auto; }
+      #topstocks{ width: 100%; border: 1px solid gray; padding: 5px; height: auto; overflow: auto; }
 </style>
 
 <div class="row">
-    <div class="stockcontainer col-md-4">
+    <div class="stockcontainer col-md-12">
         <h2>Top 5 Stocks</h2>
         <div class="topstocks" id="topstocks">
         </div>
     </div>
+</div>
 
-    <div class="dailyEvents col-md-4">
+<div class="row">
+    <div class="col-md-6">
         @{
-            if (Model.Events.Count == 0)
+            if (User.Identity.GetUserId() == null)
             {
                 <div class="alert alert-info">
-                    No events planned for today...
+                    Please log in through Facebook to use chat features.
                 </div>
             }
             else
             {
-                <h2>Today's Events</h2>
-                foreach (var anEvent in Model.Events)
-                {
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <small>From: @anEvent.DateFrom</small>
-                                <small>To: @anEvent.DateTo</small>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                @anEvent.Name
-                            </div>
-                        </div>
-                        <hr />
-                    </div>
-                }
-            }   
+                <div id="YourNickname" style="display:none">
+                </div>
+                <div id="LastRefresh">
+                </div>
+                <div id="container">
+                    
+                </div>
+                <div id="Error">
+                </div>
+                @Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
+            }
         }
     </div>
-
-    <div class="col-md-4">
+    <div class="col-md-6" style="">
         @{
             if (Model.Posts.posts != null)
             {
@@ -134,31 +127,41 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="dailyEvents col-md-6">
         @{
-            if (User.Identity.GetUserId() == null)
+            if (Model.Events.Count == 0)
             {
                 <div class="alert alert-info">
-                    Please log in through Facebook to use chat features.
+                    No events planned for today...
                 </div>
             }
             else
             {
-                <div id="YourNickname" style="display:none">
-                </div>
-                <div id="LastRefresh">
-                </div>
-                <div id="container">
-                    
-                </div>
-                <div id="Error">
-                </div>
-                @Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
-            }
+                <h2>Today's Events</h2>
+                foreach (var anEvent in Model.Events)
+                {
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <strong>@anEvent.Name</strong>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                Start: @anEvent.DateFrom
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                End: @anEvent.DateTo
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                }
+            }   
         }
-        
-       
-    </div>
+    </div>   
 
     @{
         if (Model.Posts.posts != null)
