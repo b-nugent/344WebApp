@@ -189,6 +189,7 @@
     <Compile Include="Models\CalendarModel.cs" />
     <Compile Include="Models\ChatModel.cs" />
     <Compile Include="Models\EventModel.cs" />
+    <Compile Include="Models\HomeModel.cs" />
     <Compile Include="Models\UserPostsModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />

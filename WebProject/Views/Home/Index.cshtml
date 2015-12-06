@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity;
-@model WebApplication5.Models.UserPostsModels
+@model WebApplication5.Models.HomeModel
 @{
     ViewBag.Title = "Home Page";
 }
@@ -76,12 +76,41 @@
     </div>
 
     <div class="dailyEvents col-md-4">
-        <h2>Today's Events</h2>
+        @{
+            if (Model.Events.Count == 0)
+            {
+                <div class="alert alert-info">
+                    No events planned for today...
+                </div>
+            }
+            else
+            {
+                <h2>Today's Events</h2>
+                foreach (var anEvent in Model.Events)
+                {
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <small>From: @anEvent.DateFrom</small>
+                                <small>To: @anEvent.DateTo</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                @anEvent.Name
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                }
+            }   
+        }
     </div>
 
     <div class="col-md-4">
         @{
-            if(Model.posts != null) {
+            if (Model.Posts.posts != null)
+            {
                 <h2>Update Facebook Status</h2>
                 using (Html.BeginForm("UpdateStatus", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
                 {
@@ -92,8 +121,9 @@
                         <input type="submit" class="btn btn-primary" value="Update" />
                     </div>
                 }
-            } 
-            else {
+            }
+            else
+            {
                 <div class="alert alert-info" style="margin-top: 20px">
                     Please log in to access Facebook features.
                 </div>
@@ -106,12 +136,14 @@
 <div class="row">
     <div class="col-md-6">
         @{
-            if(User.Identity.GetUserId() == null){
+            if (User.Identity.GetUserId() == null)
+            {
                 <div class="alert alert-info">
                     Please log in through Facebook to use chat features.
                 </div>
             }
-            else {
+            else
+            {
                 <div id="YourNickname" style="display:none">
                 </div>
                 <div id="LastRefresh">
@@ -129,11 +161,11 @@
     </div>
 
     @{
-        if (Model.posts != null)
+        if (Model.Posts.posts != null)
         {
             <div class="col-md-6" style="">
                 <h2>Recent Facebook Posts</h2>
-                @foreach (var post in Model.posts)
+                @foreach (var post in Model.Posts.posts)
                 {
                     <div class="container-fluid">
                         <div class="row">
