@@ -82,9 +82,12 @@ namespace WebApplication5.Controllers {
             // Validate the start time and endtime to make sure they are actually dates in a calendar.
             DateTime dtStart;
             DateTime dtEnd;
+
             if (DateTime.TryParseExact(startTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStart) == true && 
                 DateTime.TryParseExact(endTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEnd) == true) {
-                InsertEvent(EventName, EventDescription, dtStart, dtEnd);
+                    if (dtStart != dtEnd) {
+                        InsertEvent(EventName, EventDescription, dtStart, dtEnd);
+                    }
             }
             return RedirectToAction("Index");
         }
@@ -96,7 +99,7 @@ namespace WebApplication5.Controllers {
             return Json(events, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult DeleteEvent(CalendarModel c, string EventName, string EventDescription, string EventStart, string EventEnd) {
+        public ActionResult DeleteEvent(CalendarModel c) {
             int EventID = c.currentEventID;
             string UserID = User.Identity.GetUserId();
             if (UserID != null) {
@@ -107,10 +110,6 @@ namespace WebApplication5.Controllers {
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
                 cmd.Parameters.Add(new SqlParameter("@EventID", EventID));
-                cmd.Parameters.Add(new SqlParameter("@EventName", EventName));
-                cmd.Parameters.Add(new SqlParameter("@EventDescription", EventDescription));
-                cmd.Parameters.Add(new SqlParameter("@EventStart", EventEnd));
-                cmd.Parameters.Add(new SqlParameter("@EventEnd", EventStart));
 
                 db.Command = cmd;
                 db.Command.Prepare();

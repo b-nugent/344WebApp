@@ -126,7 +126,6 @@
                         $('#description').html(event.brief);
                         $('#calendarModal').modal();
                         $("#currentEventID").val(event.id);
-                        $("#currentUserID").val(event.userid);
                     },
 
                     events:$.map(data, function(item, i) {
@@ -271,7 +270,6 @@
                     </div>
                 }
                 @Html.HiddenFor(model => model.currentEventID)
-                @Html.HiddenFor(model => model.currentUserID)
                 <button id="modalClose" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
