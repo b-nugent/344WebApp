@@ -6,6 +6,8 @@ using System.Web.Mvc;
 namespace WebApplication5.Models {
     public class CalendarModel {
 
+        public int currentEventID { get; set; }
+
         public List<SelectListItem> hourList = new List<SelectListItem>();
         public int startHourVal { get; set; }
         public int endHourVal { get; set; }

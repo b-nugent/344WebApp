@@ -96,8 +96,8 @@ namespace WebApplication5.Controllers {
             return Json(events, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult DeleteEvent(string EventName, string EventDescription, string EventStart, string EventEnd) {
-
+        public ActionResult DeleteEvent(CalendarModel c, string EventName, string EventDescription, string EventStart, string EventEnd) {
+            int EventID = c.currentEventID;
             string UserID = User.Identity.GetUserId();
             if (UserID != null) {
                 MySqlConnection db = new MySqlConnection();
@@ -106,6 +106,7 @@ namespace WebApplication5.Controllers {
                 SqlCommand cmd = new SqlCommand("DeleteCalendarEvent", db.Connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
+                cmd.Parameters.Add(new SqlParameter("@EventID", EventID));
                 cmd.Parameters.Add(new SqlParameter("@EventName", EventName));
                 cmd.Parameters.Add(new SqlParameter("@EventDescription", EventDescription));
                 cmd.Parameters.Add(new SqlParameter("@EventStart", EventEnd));

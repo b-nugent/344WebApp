@@ -125,6 +125,8 @@
                         $('#endTime').html(moment(event.end).format('MMM Do h:mm A'));
                         $('#description').html(event.brief);
                         $('#calendarModal').modal();
+                        $("#currentEventID").val(event.id);
+                        $("#currentUserID").val(event.userid);
                     },
 
                     events:$.map(data, function(item, i) {
@@ -133,7 +135,8 @@
                         event.end = moment(item.DateTo);
                         event.title = item.Name;
                         event.brief = item.Description;
-                        event.id = item.UserId;
+                        event.userid = item.UserId;
+                        event.id = item.EventId;
                         return event;
                     })
                 });
@@ -267,6 +270,8 @@
                         <input id="modalDelete" type="submit" class="btn btn-danger" value="Delete"/>
                     </div>
                 }
+                @Html.HiddenFor(model => model.currentEventID)
+                @Html.HiddenFor(model => model.currentUserID)
                 <button id="modalClose" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
