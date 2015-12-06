@@ -31,7 +31,7 @@ namespace WebApplication5.Controllers {
         /// <param name="EventEnd"></param>
         /// <returns></returns>
         public ActionResult TranslateEventTime(CalendarModel c, string EventName, string EventDescription, string EventStart, string EventEnd) {
-            // Translating user input into evant start datetime variable
+            // Translating user input into event start datetime variable
             int startHour = c.startHourVal;
             string startHourText;
             if (startHour.ToString().Length == 1) {
@@ -54,10 +54,8 @@ namespace WebApplication5.Controllers {
             }
             var startTime = startHourText + ":" + c.startMinuteText + ":00";
             startTime = EventStart + " " + startTime;
-            DateTime dtStart = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-
-            // Translating user input into evant end datetime variable
+            // Translating user input into event end datetime variable
             int endHour = c.endHourVal;
             string endHourText;
             if (endHour.ToString().Length == 1) {
@@ -80,9 +78,14 @@ namespace WebApplication5.Controllers {
             }
             var endTime = endHourText + ":" + c.endMinuteText + ":00";
             endTime = EventEnd + " " + endTime;
-            DateTime dtEnd = DateTime.ParseExact(endTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
-
-            InsertEvent(EventName, EventDescription, dtStart, dtEnd);
+            
+            // Validate the start time and endtime to make sure they are actually dates in a calendar.
+            DateTime dtStart;
+            DateTime dtEnd;
+            if (DateTime.TryParseExact(startTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStart) == true && 
+                DateTime.TryParseExact(endTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEnd) == true) {
+                InsertEvent(EventName, EventDescription, dtStart, dtEnd);
+            }
             return RedirectToAction("Index");
         }
 

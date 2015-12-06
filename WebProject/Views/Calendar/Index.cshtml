@@ -67,6 +67,16 @@
         margin-top: 20px;
     }
 
+    #modalClose {
+        display: inline-block;
+        float: left;
+    }
+
+    #modalDelete {
+        display: inline-block;
+        float: right;
+    }
+
 </style>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -97,7 +107,7 @@
                     },
 
                     dayClick: function (date) {
-                        d = date.format();
+                        d = date.format("YYYY-MM-DD");
                         $('#createEvent').show();
                         $('#calendar').css("padding-top", "50px");
                         $('#EventName').val("");
@@ -108,6 +118,14 @@
                     },
 
                     editable: false,
+
+                    eventClick:  function(event, jsEvent, view) {
+                        $('#modalTitle').html(event.title);
+                        $('#startTime').html(moment(event.start).format('MMM Do h:mm A'));
+                        $('#endTime').html(moment(event.end).format('MMM Do h:mm A'));
+                        $('#description').html(event.brief);
+                        $('#calendarModal').modal();
+                    },
 
                     events:$.map(data, function(item, i) {
                         var event = new Object();
@@ -229,6 +247,26 @@
                 </div>
             </div>
         }
+</div>
+
+<div id="calendarModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+                <h4 id="modalTitle" class="modal-title"></h4>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <b>Start: </b><span id="startTime"></span><br>
+                <b>End: </b><span id="endTime"></span><br>
+                <b>Description: </b><span id="description"></span><br>
+            </div>
+            <div class="modal-footer">
+                <button id="modalClose" type="button" class="btn btn-danger">Delete</button>
+                <button id="modalDelete" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- This is where the calendar will be displayed -->
