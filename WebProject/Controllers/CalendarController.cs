@@ -100,7 +100,7 @@ namespace WebApplication5.Controllers {
         }
 
         public ActionResult DeleteEvent(CalendarModel c) {
-            int EventID = c.currentEventID;
+            int EventID = Int32.Parse(c.currentEventID);
             string UserID = User.Identity.GetUserId();
             if (UserID != null) {
                 MySqlConnection db = new MySqlConnection();
@@ -198,11 +198,14 @@ namespace WebApplication5.Controllers {
                 conn.DataReader = cmd.ExecuteReader();
                 while (conn.DataReader.Read())
                 {
+                    
                     string name = conn.DataReader["EventName"].ToString();
                     string start = conn.DataReader["EventStartTime"].ToString();
                     string end = conn.DataReader["EventEndTime"].ToString();
                     string desc = conn.DataReader["EventDescription"].ToString();
-                    EventModel anEvent = new EventModel { Name = name, DateFrom = start, DateTo = end, Description = desc };
+                    string eid = conn.DataReader["EventID"].ToString();
+
+                    EventModel anEvent = new EventModel { UserId = userId, EventId = eid, Name = name, DateFrom = start, DateTo = end, Description = desc };
                     events.Add(anEvent);
                 }
             }

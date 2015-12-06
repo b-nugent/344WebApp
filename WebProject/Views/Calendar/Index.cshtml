@@ -268,8 +268,8 @@
                     <div class="form-group">
                         <input id="modalDelete" type="submit" class="btn btn-danger" value="Delete"/>
                     </div>
+                    @Html.HiddenFor(model => model.currentEventID)
                 }
-                @Html.HiddenFor(model => model.currentEventID)
                 <button id="modalClose" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
