@@ -95,9 +95,13 @@
 
             $(function () {
                 var today = new Date();
+                var day = today.getDay()
                 var dd = today.getDate();
                 var mm = today.getMonth() + 1; //January is 0!
                 var yyyy = today.getFullYear();
+                if (day == 0) { dd = dd-2 }
+                if (day == 6) { dd = dd-1 }
+
                 if (dd < 10) {
                     dd = '0' + dd
                 }
