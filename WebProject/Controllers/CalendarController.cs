@@ -109,7 +109,7 @@ namespace WebApplication5.Controllers {
                 SqlCommand cmd = new SqlCommand("DeleteCalendarEvent", db.Connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
-                cmd.Parameters.Add(new SqlParameter("@EventID", EventID));
+                cmd.Parameters.Add(new SqlParameter("@EventId", EventID));
 
                 db.Command = cmd;
                 db.Command.Prepare();

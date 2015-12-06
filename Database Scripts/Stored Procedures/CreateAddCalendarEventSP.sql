@@ -12,7 +12,6 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[AddCalendarEvent]
 	@UserId nvarchar(128),
-	@EventId int,
 	@EventName nvarchar(100),
 	@EventDescription nvarchar(300),
 	@EventStart datetime,
@@ -21,6 +20,6 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-    INSERT INTO [dbo].[CalendarEvents] ( UserID, EventID, EventName, EventDescription, EventStartTime, EventEndTime)
-    VALUES ( @UserId, @EventId, @EventName, @EventDescription, @EventStart, @EventEnd); 
+    INSERT INTO [dbo].[CalendarEvents] ( UserID, EventName, EventDescription, EventStartTime, EventEndTime)
+    VALUES ( @UserId, @EventName, @EventDescription, @EventStart, @EventEnd); 
 END
