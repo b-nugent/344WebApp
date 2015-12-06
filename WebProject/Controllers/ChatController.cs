@@ -13,8 +13,7 @@ namespace WebApplication5.Controllers
 public class ChatController : Controller
 {
     static ChatModel chatModel;
-    private Object myLock = new Object();
-    int msgID = 1;
+
     /// <summary>
     /// When the method is called with no arguments, just return the view
     /// When argument logOn is true, a user logged on
@@ -85,6 +84,7 @@ public class ChatController : Controller
         ChatModel.ChatUser userToRemove = null;
         if (chatModel != null)
         {
+
             foreach (ChatModel.ChatUser aUser in chatModel.Users)
             {
                 if (aUser.ChatUserID.Equals(user.ChatUserID))
@@ -93,8 +93,9 @@ public class ChatController : Controller
                 }
             }
             chatModel.Users.Remove(userToRemove);
+            chatModel = new ChatModel();
         }
-        
+       
     }
 
     private ActionResult CheckLoggedInUser(string UserID, ChatModel chatModel)
@@ -125,12 +126,11 @@ public class ChatController : Controller
                 ChatModel.ChatUser msgSender;
                 string username = reader.GetString(reader.GetOrdinal("UserID"));
                 msgSender = chatModel.Users.FirstOrDefault(u => u.ChatUserID == username);
-                username = msgSender.Name;
                 chatModel.ChatHistory.Add(new ChatModel.ChatMessage
                 {
 
                     Message = reader.GetString(reader.GetOrdinal("MessageContent")),
-                    Username = username
+                    Username = msgSender.Name
                 });
             }
             #endregion
@@ -156,16 +156,14 @@ public class ChatController : Controller
 
     private void AddMessage(string UserID, string chatMessage, ChatModel chatModel)
     {
-        lock (myLock)
-        {
-
+        DateTime currentTime = DateTime.Now;
             MySqlConnection conn = new MySqlConnection();
             conn.CreateConn();
             SqlCommand cmd = new SqlCommand("AddChatMessage", conn.Connection);
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
             cmd.Parameters.Add(new SqlParameter("@MessageContent", chatMessage));
-            cmd.Parameters.Add(new SqlParameter("@TimeReceived", DateTime.Now));
+            cmd.Parameters.Add(new SqlParameter("@TimeReceived", currentTime));
 
             conn.Command = cmd;
             conn.Command.Prepare();
@@ -177,7 +175,8 @@ public class ChatController : Controller
                 SqlCommand cmd2 = new SqlCommand("AddReceivedMessage", conn.Connection);
                 cmd2.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd2.Parameters.Add(new SqlParameter("@ReceivedUserID", usr.ChatUserID));
-                cmd2.Parameters.Add(new SqlParameter("@MessageID", msgID));
+                cmd2.Parameters.Add(new SqlParameter("@MessageContent", chatMessage));
+                cmd2.Parameters.Add(new SqlParameter("@CurrentTime", currentTime));
 
                 conn.Command = cmd2;
                 conn.Command.Prepare();
@@ -188,6 +187,4 @@ public class ChatController : Controller
             chatModel.ChatHistory.Add(new ChatModel.ChatMessage { Message = chatMessage, Username = User.Identity.Name });
         }
     }
-
-}
 }
