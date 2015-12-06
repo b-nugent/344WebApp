@@ -20,3 +20,4 @@ BEGIN
     DELETE FROM [dbo].[CalendarEvents]
     WHERE (@UserId = UserID) and (@EventId = EventID)
 END
+GO

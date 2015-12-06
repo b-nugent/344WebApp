@@ -33,3 +33,4 @@ BEGIN
     INSERT INTO dbo.StockTransactions (UserID, StockName, Quantity, TransactionPrice, HasSold)
     VALUES (@UserId, @StockName, @Quantity, @TransactionPrice, @HasSold)
 END
+GO

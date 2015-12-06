@@ -22,3 +22,4 @@ BEGIN
     INSERT INTO [dbo].[ChatHistory] (UserID, MessageContent, TimeReceived)
     VALUES (@UserId, @MessageContent, @TimeReceived); 
 END
+GO
