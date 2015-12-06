@@ -18,19 +18,15 @@ GO
 -- =============================================
 -- Author:		Steven Lavoie
 -- Create date: 12-2-15
--- Description:	Return a note
+-- Description:	Return a stock transaction
 -- =============================================
-CREATE PROCEDURE [dbo].[CreateStockTransaction]
-	@UserId nvarchar(128), 
-	@StockName nvarchar(4), 
-	@Quantity int,
-	@TransactionPrice decimal,
-	@HasSold bit
+CREATE PROCEDURE [dbo].[GetStockHistory]
+	@UserId nvarchar(128)
 AS
 BEGIN
 	SET NOCOUNT ON;
 	--0 is a buy, 1 is a sell on HasSold bit
-    INSERT INTO dbo.StockTransactions (UserID, StockName, Quantity, TransactionPrice, HasSold)
-    VALUES (@UserId, @StockName, @Quantity, @TransactionPrice, @HasSold)
+	SELECT StockName, Quantity, TransactionPrice, HasSold
+    FROM dbo.StockTransactions 
+    WHERE ((UserID = @UserId));
 END
-GO

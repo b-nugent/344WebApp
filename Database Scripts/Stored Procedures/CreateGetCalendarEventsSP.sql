@@ -20,3 +20,4 @@ BEGIN
     FROM dbo.CalendarEvents
     WHERE (UserID = @UserId);
 END
+GO

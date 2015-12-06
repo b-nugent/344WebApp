@@ -31,3 +31,4 @@ BEGIN
     FROM dbo.StockTransactions 
     WHERE ((UserID = @UserId) AND (StockName = @StockName));
 END
+GO

@@ -23,3 +23,4 @@ BEGIN
     INSERT INTO [dbo].[CalendarEvents] ( UserID, EventName, EventDescription, EventStartTime, EventEndTime)
     VALUES ( @UserId, @EventName, @EventDescription, @EventStart, @EventEnd); 
 END
+GO

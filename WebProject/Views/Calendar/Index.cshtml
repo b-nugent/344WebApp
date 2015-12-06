@@ -12,6 +12,7 @@
 <style>
     h1 {
         text-align: center;
+        margin-bottom: 50px;
     }
 
     #EventName, #EventDescription, #EventStart, #EventEnd {
@@ -109,7 +110,7 @@
                     dayClick: function (date) {
                         d = date.format("YYYY-MM-DD");
                         $('#createEvent').show();
-                        $('#calendar').css("padding-top", "50px");
+                        $('#calendar').css("padding-top", "25px");
                         $('#EventName').val("");
                         $('#EventDescription').val("");
                         $('#EventStart').val(d);
@@ -175,7 +176,7 @@
 
 <!-- This is where the event creation forms will appear -->
 @using (Html.BeginForm("TranslateEventTime", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
-<div  id="createEvent">
+<div id="createEvent">
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
@@ -224,33 +225,6 @@
 </div>
 }
 
-<!-- This is where the calendar event uploading and downloading takes place. -->
-<div class="row">
-    <div class="col-md-2">
-        @using (Html.BeginForm("DownloadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
-            <div class="form-group">
-                <input id="downloadEventButton" type="submit" class="btn btn-success" value="Download" />
-            </div>
-        }
-        @if (!ViewData.ModelState.IsValidField("Upload")) {
-            <div class="alert alert-danger">
-                @ViewData.ModelState["Upload"].Errors[0]
-            </div>
-        }
-    </div>
-        @using (Html.BeginForm("UploadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" })) {
-            <div class="form-group">
-                <div class="col-md-4">
-                    <label for="file" id="fileLabel">Filename:</label>
-                    <input class="form-control" type="file" name="file" id="file" />
-                </div>
-                <div class="col-md-4">
-                    <input id="uploadEventButton" class="btn btn-primary" type="submit" value="Upload"/>
-                </div>
-            </div>
-        }
-</div>
-
 <div id="calendarModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -278,6 +252,33 @@
 
 <!-- This is where the calendar will be displayed -->
 <div id='calendar'></div>
+
+<!-- This is where the calendar event uploading and downloading takes place. -->
+<div class="row">
+    <div class="col-md-2">
+        @using (Html.BeginForm("DownloadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+            <div class="form-group">
+                <input id="downloadEventButton" type="submit" class="btn btn-success" value="Download" />
+            </div>
+        }
+        @if (!ViewData.ModelState.IsValidField("Upload")) {
+            <div class="alert alert-danger">
+                @ViewData.ModelState["Upload"].Errors[0]
+            </div>
+        }
+    </div>
+        @using (Html.BeginForm("UploadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" })) {
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label for="file" id="fileLabel">Filename:</label>
+                    <input class="form-control" type="file" name="file" id="file" />
+                </div>
+                <div class="col-md-4">
+                    <input id="uploadEventButton" class="btn btn-primary" type="submit" value="Upload"/>
+                </div>
+            </div>
+        }
+</div>
 
 
 

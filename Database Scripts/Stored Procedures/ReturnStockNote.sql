@@ -30,3 +30,4 @@ BEGIN
     FROM dbo.StockNotes 
     WHERE ((UserID = @UserId) AND (StockName = @StockName));
 END
+GO
