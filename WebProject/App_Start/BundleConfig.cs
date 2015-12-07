@@ -37,6 +37,16 @@ namespace WebApplication5
 
             bundles.Add(new ScriptBundle("~/bundles/fullcalendar").Include(
                        "~/Scripts/fullcalendar.js"));
+            
+            // This is the bundle for all of the JS needed for homepage, etc.
+            bundles.Add(new ScriptBundle("~/bundles/core").Include(
+                        "~/Scripts/jquery.min.js",
+                        "~/Scripts/jquery.unobtrusive-ajax.js",
+                        "~/Scripts/jquery-ui-1.8.20.js",
+                        "~/Scripts/jquery.validate.js",
+                        "~/Scripts/Chat.js",
+                        "~/Scripts/jquery.validate.unobtrusive.js",
+                        "~/Scripts/GoogleAnalytics.js"));
         }
     }
 }
