@@ -7,6 +7,7 @@ using NUnit.Framework;
 using System.Web.Mvc;
 using System.Web;
 using Moq;
+using WebApplication5.Models;
 
 namespace NUnitTests
 {
@@ -16,13 +17,13 @@ namespace NUnitTests
         [Test]
         public void TestNewStock()
         {
-            var stock = new Mock<StockDescription.Stock>();
+            var stock = new Mock<Stock>();
             stock.SetupProperty(x => x.Symbol,"GOOG");
             stock.SetupProperty(x => x.Name, "Alphabet");
             stock.SetupProperty(x => x.NumShares, 25);
             stock.SetupProperty(x => x.Note, "Don't be evil");
 
-            StockDescription.Stock myStock = stock.Object;
+            Stock myStock = stock.Object;
             Assert.AreEqual("GOOG", myStock.Symbol);
             Assert.AreEqual("Alphabet", myStock.Name);
             Assert.AreEqual("Don't be evil", myStock.Note);

@@ -34,6 +34,15 @@ namespace NUnitTests
             //Assert.NotNull(result, "Not a redirect result");
 
         }
+
+        [Test]
+        public void TestIndex()
+        {
+            string expected = "";
+            var controller = new WebApplication5.Controllers.StockController();
+            var result = controller.Index() as ViewResult;
+            Assert.AreEqual(expected, result.ViewName);
+        }
         
     }
 }
