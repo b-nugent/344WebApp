@@ -250,7 +250,7 @@
             if (text) {
 
                 //call the Index method of the controller and pass the attribute "chatMessage"
-                var href = "/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
+                var href = "/R2/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
                 href = href + "&chatMessage=" + encodeURIComponent(text);
                 $("a#ActionLink").attr("href", href);
                 $("a#ActionLink")[0].click();
@@ -264,7 +264,7 @@
         $("#btnLogOff").click(function () {
 
             //call the Index method of the controller and pass the attribute "logOff"
-            var href = "/?user=" + encodeURIComponent($("#YourNickname").text());
+            var href = "/R2/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
             href = href + "&logOff=true";
             $("a#ActionLink").attr("href", href);
             $("a#ActionLink")[0].click();
