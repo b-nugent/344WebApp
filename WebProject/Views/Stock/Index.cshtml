@@ -53,6 +53,7 @@
 
 @Ajax.ActionLink("Login", "Index", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
 
+
 @section JavaScript{
     <script src='/Scripts/jquery.min.js'></script>
     <script src="/Scripts/chart.js"></script>
