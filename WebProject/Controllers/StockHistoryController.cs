@@ -19,7 +19,10 @@ namespace WebApplication5.Controllers
         {
             // This is a message that can be called on the Stock's page.
             string userId = User.Identity.GetUserId();
-            GetStockHistory(userId);
+            if (userId != null)
+            {
+                GetStockHistory(userId);
+            }
             ViewBag.Message = "Stock History";
             return View(userHistory);
         }
@@ -27,7 +30,6 @@ namespace WebApplication5.Controllers
         public StockHistory GetStockHistory(string userId)
         {
             Dictionary<string, List<Stock>> dict = new Dictionary<string, List<Stock>>();
-
 
             MySqlConnection conn = new MySqlConnection();
             conn.CreateConn();

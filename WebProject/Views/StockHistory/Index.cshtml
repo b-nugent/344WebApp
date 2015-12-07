@@ -10,7 +10,6 @@
 <!DOCTYPE html>
 <html>
  <head>
-   <title>Small Bakery Products</title>
    <style>
        table, th, td {
          border: solid 1px #bbbbbb;
@@ -20,60 +19,80 @@
     </style>
  </head>
  <body>
-   <h1>Stock History</h1>
-   <table>
-       <thead>
-           <tr>
-               <th>Stock Ticker</th>
-               <th>Number of Shares</th>
-               <th>Bought Price</th>
-       <th>Sold Price</th>
-           </tr>
-       </thead>
-       <tbody>
-           @foreach(var key in Model.userHistory.Keys){
-           foreach(var stock in Model.userHistory[key]){
-            <tr>
-               <td>@stock.Symbol</td>
-                   <td>@stock.NumShares</td>
-                   <td>@stock.BoughtPrice</td>
-                   <td>@stock.SoldPrice</td>
-            </tr>
-            }
-           }
-       </tbody>
-   </table>
- </body>
-
-        <div class="col-md-2">
-        @using (Html.BeginForm("DownloadStocks", "StockHistory", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
-            <div class="form-group">
-                <input id="downloadStockButton" type="submit" class="btn btn-success" value="Download" />
-            </div>
-        }
-        @if (!ViewData.ModelState.IsValidField("Upload")) {
-            <div class="alert alert-danger">
-                @ViewData.ModelState["Upload"].Errors[0]
-            </div>
-        }
-    </div>
-
-        @using (Html.BeginForm("UploadStocks", "StockHistory", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" })) {
-            <div class="form-group">
-                <div class="col-md-4">
-                    <label for="file" id="fileLabel">Filename:</label>
-                    <input class="form-control" type="file" name="file" id="file" />
-                </div>
-                <div class="col-md-4">
-                    <input id="uploadEventButton" class="btn btn-primary" type="submit" value="Upload"/>
+    @{
+        if(Model.userHistory == null) {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-info" style="margin-top: 20px">
+                        Please log in to view your stock transaction history.
+                    </div>
                 </div>
             </div>
         }
+        else {
+            <h1>Stock History</h1>
+           <table>
+               <thead>
+                   <tr>
+                       <th>Stock Ticker</th>
+                       <th>Number of Shares</th>
+                       <th>Bought Price</th>
+               <th>Sold Price</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   @foreach(var key in Model.userHistory.Keys){
+                   foreach(var stock in Model.userHistory[key]){
+                    <tr>
+                       <td>@stock.Symbol</td>
+                           <td>@stock.NumShares</td>
+                           <td>@stock.BoughtPrice</td>
+                           <td>@stock.SoldPrice</td>
+                    </tr>
+                    }
+                   }
+               </tbody>
+           </table>
+ 
+            <div class="row">
+                @using (Html.BeginForm("DownloadStocks", "StockHistory", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+                    <div class="form-group">
+                        <div class="col-md-3">
+                            <input id="downloadStockButton" type="submit" class="btn btn-success" value="Download" />
+                        </div>
+                    </div>
+                }
+                @if (!ViewData.ModelState.IsValidField("Upload")) {
+                    <div class="alert alert-danger">
+                        @ViewData.ModelState["Upload"].Errors[0]
+                    </div>
+                }
+                @using (Html.BeginForm("UploadStocks", "StockHistory", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" })) {
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <div class="col-md-3">
+                                <label for="file" id="fileLabel">Filename:</label>
+                            </div>
+                            <div class="col-md-9">
+                                <input class="form-control" type="file" name="file" id="file" />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <input id="uploadEventButton" class="btn btn-primary" type="submit" value="Upload"/>
+                        </div>
+                    </div>
+                }
 
-        <div class="col-md-2">
-        @using (Html.BeginForm("DeleteStockHistory", "StockHistory", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
-            <div class="form-group">
-                <input id="deleteStockButton" type="submit" class="btn btn-danger" value="Delete History" />
-            </div>
+                
+                @using (Html.BeginForm("DeleteStockHistory", "StockHistory", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+                    <div class="form-group">
+                        <div class="col-md-2">
+                            <input id="deleteStockButton" type="submit" class="btn btn-danger" value="Delete History" />
+                        </div>
+                    </div>
+                }
+            </div>  
         }
+    }
+  </body>
 </html>
