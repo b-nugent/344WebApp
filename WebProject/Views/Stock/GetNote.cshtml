@@ -1,51 +1,39 @@
-@using Microsoft.AspNet.Identity;
+﻿@model WebApplication5.Models.Stock
+
 @{
-    ViewBag.Title = "GetNote";
-    //StockDescription.Stock StockNote = new StockDescription.Stock();
+    ViewBag.Title = "Stock Note";
 }
 
-
-@model WebApplication5.Models.Stock
-
+@{
+    <h2>Current Stock Note</h2>
+    if(Model.Note != null && !(Model.Note.Equals(""))) {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    @Model.Note
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                @using (Html.BeginForm("DeleteStockNote", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+                    <div class="form-group">
+                        <input type="hidden" name="stockName" value="@Model.Name" />
+                        <input type="submit" class="btn btn-danger" value="Delete"/>
+                    </div>
+                }
+            </div>
+        </div>
+    } 
+    else {
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    No notes have been entered for this stock.
+                </div>
+            </div>
+        </div>
+    }   
         
-@{
-if(User.Identity.GetUserId() != null) {
-
-<div class="col-md-8 afterSearch">
-    @using (Html.BeginForm("BuyStock", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
-    {
-        <div class ="stockNote form-group" id="buyStock">
-            <div class="form-group" id="buyTicker">
-                <input type="hidden" class="ticker" name="stock" value="" />
-            </div>
-            <div class="form-group" id="buyAction">
-                @Html.TextBox("buy", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Purchase"})
-            </div>
-            
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Buy" />
-            </div>
-        </div>
-    }
-</div>
-
-    <div class="col-md-8 afterSearch">
-    @using (Html.BeginForm("SellStock", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
-    {
-        <div class ="stockNote form-group" id="sellStock">
-            <div class="form-group" id="sellTicker">
-                <input type="hidden" class="ticker" name="stock" value="" />
-            </div>
-            <div class="form-group" id="sellAction">
-                    @Html.TextBox("sell", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Sell"})
-            </div>
-            
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Sell" />
-            </div>
-        </div>
-    }
-</div>
-}
 }
 

@@ -24,7 +24,7 @@ namespace WebApplication5.Controllers
         public ActionResult AddNote(string stock, string note)
         {
             string userId = User.Identity.GetUserId();
-
+            stock = stock.ToUpper();
             MySqlConnection conn = new MySqlConnection();
             conn.CreateConn();
             SqlCommand cmd = new SqlCommand("AddStockNote", conn.Connection);
@@ -40,7 +40,7 @@ namespace WebApplication5.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult GetNote(string stock, string note)
+        public ActionResult GetNote(string stock)
         {
             string userId = User.Identity.GetUserId();
             string noteString = "";
@@ -54,7 +54,6 @@ namespace WebApplication5.Controllers
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@UserId", userId));
                 cmd.Parameters.Add(new SqlParameter("@StockName", stock));
-                cmd.Parameters.Add(new SqlParameter("@StockNote", note));
 
                 conn.DataReader = cmd.ExecuteReader();
                 while (conn.DataReader.Read())
@@ -62,17 +61,16 @@ namespace WebApplication5.Controllers
                     noteString = conn.DataReader["StockNote"].ToString();
                 }
                 
-                StockNote.Note = noteString;
-                //StockNote.Note = "Test";
+                StockNote.Note = noteString.Trim();
+                StockNote.Name = stock;
             }
-            //StockNote.Note = "Test";
-            return View(StockNote);
+            return PartialView(StockNote);
         }
 
         public ActionResult DeleteStockNote(string stockName)
         {
             string userId = User.Identity.GetUserId();
-
+            stockName = stockName.ToUpper();
             if (userId != null)
             {
                 MySqlConnection conn = new MySqlConnection();
@@ -86,7 +84,6 @@ namespace WebApplication5.Controllers
                 conn.Command = cmd;
                 conn.Command.Prepare();
                 conn.Command.ExecuteNonQuery();
-
             }
             return RedirectToAction("index");
         }

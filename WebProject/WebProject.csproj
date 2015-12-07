@@ -293,8 +293,9 @@
     <Content Include="Views\Chat\Lobby.cshtml" />
     <Content Include="Views\Chat\ChatHistory.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
-    <Content Include="Views\Stock\GetNote.cshtml" />
+    <Content Include="Views\Stock\StockFields.cshtml" />
     <Content Include="Views\StockHistory\Index.cshtml" />
+    <Content Include="Views\Stock\GetNote.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

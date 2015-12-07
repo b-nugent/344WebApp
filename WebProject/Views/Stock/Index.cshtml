@@ -16,9 +16,7 @@
     }
 
     #stockTransaction {
-        float: right;
         height: 75%;
-        width: 500px;
         display: inline-block;
         border: solid #00b7e6;
         border-width: 2px;
@@ -29,7 +27,6 @@
 
     #stockInfo {
         float: right;
-        width: 500px;
         display: inline-block;
         border: solid #00b7e6;
         border-width: 2px;
@@ -40,7 +37,6 @@
 
     #stockSearch {
         float: left;
-        width: 500px;
         display: inline-block;
         border: solid #00b7e6;
         border-width: 2px;
@@ -51,7 +47,16 @@
 
     #stockNote {
         float: left;
-        width: 600px;
+        display: inline-block;
+        border: solid #00b7e6;
+        border-width: 2px;
+        border-radius: 5px;
+        margin: 15px;
+        padding: 0px 20px 20px 20px;
+    }
+
+    #stockViewNote {
+        float: left;
         display: inline-block;
         border: solid #00b7e6;
         border-width: 2px;
@@ -62,7 +67,7 @@
 </style>
 
 <div class="row">
-    <div id="stockSearch" class="col-md-6">
+    <div id="stockSearch" class="col-md-5">
         <h2>Stock Search</h2>
         <div class="col-md-2" style="padding-left: 0px;">
             <button type="button" class="btn btn-primary" id="search">Search</button>
@@ -80,8 +85,11 @@
 @{
 if(User.Identity.GetUserId() != null) {
 <div class="row">
-    <div id="stockNote" class="col-md-6 afterSearch">
-        <h2>Stock Note</h2>
+    <div class="col-md-6 afterSearch" id="stockViewNote">
+
+    </div>
+    <div id="stockNote" class="col-md-5 afterSearch">
+        <h2>Update Stock Note</h2>
         @using (Html.BeginForm("AddNote", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
         {
                 <div class="form-group">
@@ -96,18 +104,16 @@ if(User.Identity.GetUserId() != null) {
                 </div>
         }
     </div>
-
+</div>
+<div class="row">
     <div id="stockTransaction" class="col-md-6">
         <h2>Stock Transaction</h2>
-        @Html.Partial("GetNote", StockNote)
+        @Html.Partial("StockFields", StockNote)
     </div>
 </div>
+@Ajax.ActionLink("GetNote", "GetNote", "Stock", new object { }, new AjaxOptions { UpdateTargetId = "stockViewNote", OnSuccess = "OnNoteLoad", OnFailure = "OnNoteFail" }, new { @id = "GetNoteButton", @style = "visibility:hidden;" })
 }
 }
-
-
-@Ajax.ActionLink("Login", "Index", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "stockChart", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
-
 
 @section JavaScript{
     <script src='/Scripts/jquery.min.js'></script>
@@ -126,12 +132,15 @@ if(User.Identity.GetUserId() != null) {
             $('#stockTransaction').hide();
             $(".afterSearch").hide();
             $('#search').click(function () {
+                $(".afterSearch").hide();
+                $('#stockTransaction').hide();
                 $('#stockChart').hide();
                 $('#stockInfo').html("");
                 $('#stockInfo').html("<h2>Stock Information</h2>");
                 $('#stockInfo').show();
                 items.length = 0;
                 symbol = $('input[id=stockTicker]').val();
+                $(".ticker").val(symbol);
                 var url = 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%3D%22' + symbol + '%22&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=';
                 $.getJSON(url, function (data) {
                     $.each(data.query.results.quote, function (key, val) {
@@ -149,11 +158,10 @@ if(User.Identity.GetUserId() != null) {
 
                     });
                     $('<ul/>', { 'class': 'my-new-list', html: items.join('') }).appendTo('#stockInfo');
-                    $(".afterSearch").show();
-                    $(".ticker").val(symbol);
+                    
                 });
 
-                $('#stockTransaction').show();
+                
 
                 quoteData.length = 0; //clear old information
 
@@ -193,38 +201,57 @@ if(User.Identity.GetUserId() != null) {
                         quoteData = quoteData.reverse(); //sort the query's information to be chronological
                     });
 
-                    setTimeout("createChart()", 1000);
+                    setTimeout("createChart()", 3000);
 
                 });
+                
             });
         });
 
         function createChart() {
 
-            // Create the chart
-            chart = new Highcharts.StockChart({
-                chart: {
-                    renderTo: 'stockChart'
-                },
+            if (quoteData.length != 0) {
+                // Create the chart
+                chart = new Highcharts.StockChart({
+                    chart: {
+                        renderTo: 'stockChart'
+                    },
 
-                rangeSelector: {
-                    selected: 1
-                },
+                    rangeSelector: {
+                        selected: 1
+                    },
 
-                title: {
-                    text: symbol.toUpperCase() + ' Stock Price'
-                },
+                    title: {
+                        text: symbol.toUpperCase() + ' Stock Price'
+                    },
 
-                series: [{
-                    name: symbol,
-                    data: quoteData,
-                    tooltip: {
-                        valueDecimals: 2
-                    }
-                }]
-            });
-            $("#stockChart").show();
+                    series: [{
+                        name: symbol,
+                        data: quoteData,
+                        tooltip: {
+                            valueDecimals: 2
+                        }
+                    }]
+                });
+                $("#stockChart").show();
+                $(".afterSearch").show();
+                $('#stockTransaction').show();
+                $(".ticker").val(symbol);
+
+                var href = $("a#GetNoteButton").attr("href");
+                var hrefParam = href + "?stock=" + symbol;
+                $("a#GetNoteButton").attr("href", hrefParam);
+                $("a#GetNoteButton")[0].click();
+                $("a#GetNoteButton").attr("href", href);
+            }
         }
         
+        function OnNoteLoad() {
+            console.log("Success");
+        }
+
+        function OnNoteFail() {
+            console.log("fail");
+        }
     </script>
 }
