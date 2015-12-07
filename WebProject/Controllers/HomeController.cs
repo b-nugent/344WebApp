@@ -206,6 +206,7 @@ namespace WebApplication5.Controllers
                 }
                 Top5.Add(calculateEarned(TransactionList));
             }
+            Top5 = sortTop5(Top5);
             return Top5;
         }
 
@@ -217,7 +218,7 @@ namespace WebApplication5.Controllers
             {
                 if (s.SoldPrice == 0)
                 {
-                    finalStock.SoldPrice -= (s.BoughtPrice * s.NumShares);
+                    finalStock.SoldPrice -= s.BoughtPrice * s.NumShares;
                     finalStock.NumShares += s.NumShares;
                 }
                 if (s.BoughtPrice == 0)
@@ -227,6 +228,22 @@ namespace WebApplication5.Controllers
                 }
             }
             return finalStock;
+        }
+
+        public List<Stock> sortTop5(List<Stock> currTop5)
+        {
+           // List<Stock> sortedTop5 = new List<Stock>();
+            //Stock prevStock = new Stock();
+            /*foreach (Stock currentStock in currTop5)
+            {
+                if (currentStock.SoldPrice > prevStock.SoldPrice)
+                {
+                    sortedTop5[
+                }
+                prevStock = currentStock;
+            }*/
+            List<Stock> SortedList = currTop5.OrderBy(o => o.SoldPrice).ToList();
+            return SortedList;
         }
 	}
 }
