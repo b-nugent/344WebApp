@@ -150,46 +150,48 @@ namespace WebApplication5.Controllers
         {
             Dictionary<string, List<Stock>> dict = new Dictionary<string, List<Stock>>();
 
-
-            MySqlConnection conn = new MySqlConnection();
-            conn.CreateConn();
-            SqlCommand cmd = new SqlCommand("GetStockHistory", conn.Connection);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add(new SqlParameter("@UserId", userId));
-
-            conn.DataReader = cmd.ExecuteReader();
-            while (conn.DataReader.Read())
+            if (userId != null)
             {
-                Stock userStock = new Stock();
-                string sname = conn.DataReader["StockName"].ToString();
-                int quantity = Convert.ToInt16(conn.DataReader["Quantity"]);
-                decimal price = Convert.ToDecimal(conn.DataReader["TransactionPrice"]);
-                int hasSold = Convert.ToInt16(conn.DataReader["HasSold"]);
+                MySqlConnection conn = new MySqlConnection();
+                conn.CreateConn();
+                SqlCommand cmd = new SqlCommand("GetStockHistory", conn.Connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@UserId", userId));
 
-                if (hasSold == 1)
+                conn.DataReader = cmd.ExecuteReader();
+                while (conn.DataReader.Read())
                 {
-                    userStock.SoldPrice = price;
-                    userStock.BoughtPrice = 0;
-                }
+                    Stock userStock = new Stock();
+                    string sname = conn.DataReader["StockName"].ToString();
+                    int quantity = Convert.ToInt16(conn.DataReader["Quantity"]);
+                    decimal price = Convert.ToDecimal(conn.DataReader["TransactionPrice"]);
+                    int hasSold = Convert.ToInt16(conn.DataReader["HasSold"]);
 
-                else
-                {
-                    userStock.BoughtPrice = price;
-                    userStock.SoldPrice = 0;
-                }
-                userStock.Symbol = sname;
-                userStock.NumShares = quantity;
-                if (dict.ContainsKey(sname))
-                {
-                    dict[sname].Add(userStock);
-                }
-                else
-                {
-                    List<Stock> userTransactions = new List<Stock>();
-                    userTransactions.Add(userStock);
-                    dict.Add(sname, userTransactions);
-                }
+                    if (hasSold == 1)
+                    {
+                        userStock.SoldPrice = price;
+                        userStock.BoughtPrice = 0;
+                    }
 
+                    else
+                    {
+                        userStock.BoughtPrice = price;
+                        userStock.SoldPrice = 0;
+                    }
+                    userStock.Symbol = sname;
+                    userStock.NumShares = quantity;
+                    if (dict.ContainsKey(sname))
+                    {
+                        dict[sname].Add(userStock);
+                    }
+                    else
+                    {
+                        List<Stock> userTransactions = new List<Stock>();
+                        userTransactions.Add(userStock);
+                        dict.Add(sname, userTransactions);
+                    }
+
+                }
             }
 
             return dict;
