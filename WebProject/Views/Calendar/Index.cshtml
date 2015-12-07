@@ -1,4 +1,5 @@
-﻿@model WebApplication5.Models.CalendarModel
+﻿@using Microsoft.AspNet.Identity;
+@model WebApplication5.Models.CalendarModel
 
 @{  
     ViewBag.Title = "Calendar";
@@ -177,7 +178,8 @@
 <h1>@ViewBag.Message</h1>
 
 <!-- This is where the event creation forms will appear -->
-@using (Html.BeginForm("TranslateEventTime", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+@using (Html.BeginForm("TranslateEventTime", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+{
 <div id="createEvent">
     <div class="row">
         <div class="col-md-4">
@@ -240,7 +242,8 @@
                 <b>Description: </b><span id="description"></span><br>
             </div>
             <div class="modal-footer">
-                @using (Html.BeginForm("DeleteEvent", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+                @using (Html.BeginForm("DeleteEvent", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+                {
                     <div class="form-group">
                         <input id="modalDelete" type="submit" class="btn btn-danger" value="Delete"/>
                     </div>
@@ -255,32 +258,41 @@
 <!-- This is where the calendar will be displayed -->
 <div id='calendar'></div>
 
-<!-- This is where the calendar event uploading and downloading takes place. -->
-<div class="row">
-    <div class="col-md-2">
-        @using (Html.BeginForm("DownloadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
-            <div class="form-group">
-                <input id="downloadEventButton" type="submit" class="btn btn-success" value="Download" />
+@{
+    if (User.Identity.GetUserId() != null)
+    {
+    <!-- This is where the calendar event uploading and downloading takes place. -->
+        <div class="row">
+            <div class="col-md-2">
+                @using (Html.BeginForm("DownloadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+                {
+                    <div class="form-group">
+                        <input id="downloadEventButton" type="submit" class="btn btn-success" value="Download" />
+                    </div>
+                }
+                @if (!ViewData.ModelState.IsValidField("Upload"))
+                {
+                    <div class="alert alert-danger">
+                        @ViewData.ModelState["Upload"].Errors[0]
+                    </div>
+                }
             </div>
-        }
-        @if (!ViewData.ModelState.IsValidField("Upload")) {
-            <div class="alert alert-danger">
-                @ViewData.ModelState["Upload"].Errors[0]
-            </div>
-        }
-    </div>
-        @using (Html.BeginForm("UploadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" })) {
-            <div class="form-group">
-                <div class="col-md-4">
-                    <label for="file" id="fileLabel">Filename:</label>
-                    <input class="form-control" type="file" name="file" id="file" />
-                </div>
-                <div class="col-md-4">
-                    <input id="uploadEventButton" class="btn btn-primary" type="submit" value="Upload"/>
-                </div>
-            </div>
-        }
-</div>
+                @using (Html.BeginForm("UploadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" }))
+                {
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <label for="file" id="fileLabel">Filename:</label>
+                            <input class="form-control" type="file" name="file" id="file" />
+                        </div>
+                        <div class="col-md-4">
+                            <input id="uploadEventButton" class="btn btn-primary" type="submit" value="Upload"/>
+                        </div>
+                    </div>
+                }
+        </div>
+    }
+}
+
 
 
 
