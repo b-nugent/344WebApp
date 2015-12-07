@@ -201,14 +201,19 @@ namespace WebApplication5.Controllers
             List<Stock> Top5 = new List<Stock>();
             List<Stock> TransactionList = new List<Stock>();
             string userId = User.Identity.GetUserId();
-            Dictionary<string, List<Stock>> history = GetStockHistoryForDownload(userId);
-            foreach (string key in history.Keys){
-                foreach (Stock stockValues in history[key]){
-                    TransactionList.Add(stockValues);
+            if (userId != null)
+            {
+                Dictionary<string, List<Stock>> history = GetStockHistoryForDownload(userId);
+                foreach (string key in history.Keys)
+                {
+                    foreach (Stock stockValues in history[key])
+                    {
+                        TransactionList.Add(stockValues);
+                    }
+                    Top5.Add(calculateEarned(TransactionList));
                 }
-                Top5.Add(calculateEarned(TransactionList));
+                Top5 = sortTop5(Top5);
             }
-            Top5 = sortTop5(Top5);
             return Top5;
         }
 
