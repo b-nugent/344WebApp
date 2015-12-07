@@ -4,9 +4,6 @@
     ViewBag.Title = "Home Page";
 }
 
-@section JavaScript{
-    @Scripts.Render("~/bundles/core")
-}
 
 <style type="text/css">
     .box {
@@ -218,7 +215,7 @@
 <script type='text/javascript'>
     $(document).ready(function () {
 
-        var href = "/Chat/Index?";
+        var href = "/R2/Chat/Index?";
         href = href + "&logOn=true";
         $("#LoginButton").attr("href", href)
         $("a#LoginButton")[0].click();
