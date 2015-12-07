@@ -31,9 +31,14 @@ namespace WebApplication5.Controllers {
         /// <param name="EventEnd"></param>
         /// <returns></returns>
         public ActionResult TranslateEventTime(CalendarModel c, string EventName, string EventDescription, string EventStart, string EventEnd) {
-            // Translating user input into evant start datetime variable
+            // Translating user input into event start datetime variable
             int startHour = c.startHourVal;
-            string startHourText = startHour.ToString();
+            string startHourText;
+            if (startHour.ToString().Length == 1) {
+                startHourText = "0" + startHour.ToString();
+            } else {
+                startHourText = startHour.ToString();
+            }
             if (c.startTimeframeText == null) {
                 c.startTimeframeText = "AM";
             }
@@ -47,17 +52,17 @@ namespace WebApplication5.Controllers {
             if (startHour == 12 && c.startTimeframeText == "AM") {
                 startHourText = "00";
             }
-            if (startHour.GetType() == typeof(int)) {
-                startHour.ToString();
-            }
             var startTime = startHourText + ":" + c.startMinuteText + ":00";
             startTime = EventStart + " " + startTime;
-            DateTime dtStart = DateTime.ParseExact(startTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-
-            // Translating user input into evant end datetime variable
+            // Translating user input into event end datetime variable
             int endHour = c.endHourVal;
-            string endHourText = startHour.ToString();
+            string endHourText;
+            if (endHour.ToString().Length == 1) {
+                endHourText = "0" + endHour.ToString();
+            } else {
+                endHourText = endHour.ToString();
+            }
             if (c.endTimeframeText == null) {
                 c.endTimeframeText = "AM";
             }
@@ -71,14 +76,19 @@ namespace WebApplication5.Controllers {
             if (endHour == 12 && c.endTimeframeText == "AM") {
                 endHourText = "00";
             }
-            if (endHour.GetType() == typeof(int)) {
-                endHour.ToString();
-            }
             var endTime = endHourText + ":" + c.endMinuteText + ":00";
             endTime = EventEnd + " " + endTime;
-            DateTime dtEnd = DateTime.ParseExact(endTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None);
+            
+            // Validate the start time and endtime to make sure they are actually dates in a calendar.
+            DateTime dtStart;
+            DateTime dtEnd;
 
-            InsertEvent(EventName, EventDescription, dtStart, dtEnd);
+            if (DateTime.TryParseExact(startTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtStart) == true && 
+                DateTime.TryParseExact(endTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out dtEnd) == true) {
+                    if (dtStart != dtEnd) {
+                        InsertEvent(EventName, EventDescription, dtStart, dtEnd);
+                    }
+            }
             return RedirectToAction("Index");
         }
 
@@ -87,6 +97,26 @@ namespace WebApplication5.Controllers {
             List<EventModel> events = QueryEvents();
            
             return Json(events, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult DeleteEvent(CalendarModel c) {
+            int EventID = Int32.Parse(c.currentEventID);
+            string UserID = User.Identity.GetUserId();
+            if (UserID != null) {
+                MySqlConnection db = new MySqlConnection();
+                db.CreateConn();
+
+                SqlCommand cmd = new SqlCommand("DeleteCalendarEvent", db.Connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@UserId", UserID));
+                cmd.Parameters.Add(new SqlParameter("@EventId", EventID));
+
+                db.Command = cmd;
+                db.Command.Prepare();
+                db.Command.ExecuteNonQuery();
+            }
+            
+            return RedirectToAction("Index");
         }
 
         public ActionResult DownloadEvents()
@@ -168,11 +198,14 @@ namespace WebApplication5.Controllers {
                 conn.DataReader = cmd.ExecuteReader();
                 while (conn.DataReader.Read())
                 {
+                    
                     string name = conn.DataReader["EventName"].ToString();
                     string start = conn.DataReader["EventStartTime"].ToString();
                     string end = conn.DataReader["EventEndTime"].ToString();
                     string desc = conn.DataReader["EventDescription"].ToString();
-                    EventModel anEvent = new EventModel { Name = name, DateFrom = start, DateTo = end, Description = desc };
+                    string eid = conn.DataReader["EventID"].ToString();
+
+                    EventModel anEvent = new EventModel { UserId = userId, EventId = eid, Name = name, DateFrom = start, DateTo = end, Description = desc };
                     events.Add(anEvent);
                 }
             }

@@ -16,7 +16,8 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 
-    SELECT EventName, EventStartTime, EventEndTime, EventDescription
+    SELECT EventID, EventName, EventStartTime, EventEndTime, EventDescription
     FROM dbo.CalendarEvents
     WHERE (UserID = @UserId);
 END
+GO

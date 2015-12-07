@@ -21,3 +21,4 @@ BEGIN
     INSERT INTO dbo.StockNotes (UserID, StockName, StockNote)
     VALUES (@UserId, @StockName, @StockNote);
 END
+GO

@@ -1,3 +1,5 @@
+USE [aspnet-WebApplication5-20150927053851]
+GO
 -- ================================================
 -- Template generated from Template Explorer using:
 -- Create Procedure (New Menu).SQL
@@ -16,18 +18,16 @@ GO
 -- =============================================
 -- Author:		Steven Lavoie
 -- Create date: 12-2-15
--- Description:	Return a note
+-- Description:	Return a stock transaction
 -- =============================================
-CREATE PROCEDURE [dbo].[GetStockNote]
-	@UserId nvarchar(128), 
-	@StockName nvarchar(4), 
-	@StockNote nvarchar(300)
+CREATE PROCEDURE [dbo].[GetStockHistory]
+	@UserId nvarchar(128)
 AS
 BEGIN
 	SET NOCOUNT ON;
-
-    SELECT StockNote
-    FROM dbo.StockNotes 
-    WHERE ((UserID = @UserId) AND (StockName = @StockName));
+	--0 is a buy, 1 is a sell on HasSold bit
+	SELECT StockName, Quantity, TransactionPrice, HasSold
+    FROM dbo.StockTransactions 
+    WHERE ((UserID = @UserId));
 END
 GO

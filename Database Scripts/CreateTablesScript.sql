@@ -27,6 +27,7 @@ CREATE TABLE [aspnet-WebApplication5-20150927053851].dbo.ChatHistory (
   MessageID INTEGER IDENTITY(1,1) PRIMARY KEY,
   UserID NVARCHAR(128)FOREIGN KEY REFERENCES [aspnet-WebApplication5-20150927053851].dbo.AspNetUsers ON DELETE CASCADE NOT NULL,
   MessageContent NVARCHAR(300) NOT NULL,
+  TimeReceived DATETIME NOT NULL
 );
 
 CREATE TABLE [aspnet-WebApplication5-20150927053851].dbo.UserChatHistory (

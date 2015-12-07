@@ -23,7 +23,9 @@ GO
 CREATE PROCEDURE [dbo].[AddReceivedMessage]
 	-- Add the parameters for the stored procedure here
 	@ReceivedUserId nvarchar(128),
-	@MessageID int
+	@MessageContent nvarchar(300),
+    @CurrentTime datetime
+    
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from
@@ -31,6 +33,9 @@ BEGIN
 	SET NOCOUNT ON;
 
    INSERT INTO [dbo].[UserChatHistory] (ReceivedUserID, MessageID)
-   VALUES (@ReceivedUserId, @MessageID); 
+   SELECT @ReceivedUserID, H.MessageID
+   FROM dbo.ChatHistory H
+   WHERE (H.MessageContent = @MessageContent) and (H.TimeReceived = @CurrentTime)
+   
 END
 GO

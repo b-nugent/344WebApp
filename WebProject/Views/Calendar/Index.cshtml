@@ -6,28 +6,15 @@
 
 @section JavaScript{
     @Styles.Render("~/Content/fullcalendarcss")
+
+    
 }
 
 
 <style>
     h1 {
         text-align: center;
-    }
-
-    #createEvent {
-        margin: 0 auto;
-        padding: 30px 0 30px 0;
-        height: 100%;
-        width: 100%;
-    }
-
-    #createEvent label {
-        height: 25px;
-        width: 150px;
-        float: left;
-        display: block;
-        vertical-align: middle;
-        margin: 5px 0 5px 0;
+        margin-bottom: 50px;
     }
 
     #EventName, #EventDescription, #EventStart, #EventEnd {
@@ -39,18 +26,60 @@
         margin: 0;
     }
 
-    #EventStartHour, #EventStartMidday, #EventStartMinute, #EventEndHour, #EventEndMidday, #EventEndMinute {
+    #EventStartHour, #EventStartTimeframe, #EventStartMinute, #EventEndHour, #EventEndTimeframe, #EventEndMinute {
         display: inline-block;
         width: 75px;
+        margin: 0;
+    }
+
+    label {
+        display: block;
     }
 
     #createEventButton {
         padding: 5px 15px 5px 15px;
+        margin-top: 10px;
+        margin-left: 18px;
+
     }
 
-    .form-control {
-        width: 200px;
+    #downloadEventButton {
+        padding: 5px 15px 5px 15px;
+        vertical-align: central;
+        margin-top: 18px;
     }
+
+    #uploadEventButton {
+        vertical-align: central;
+        margin-top: 4px;
+    }
+
+    #file {
+        padding: 10px 30px 30px 10px;
+        width: 232px;
+        display: inline-block;
+
+    }
+
+    #fileLabel {
+        display: inline-block;
+        vertical-align: central;
+    }
+
+    #calendar {
+        margin-top: 20px;
+    }
+
+    #modalClose {
+        display: inline-block;
+        float: right;
+    }
+
+    #modalDelete {
+        display: inline-block;
+        float: left;
+    }
+
 </style>
 
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -81,8 +110,9 @@
                     },
 
                     dayClick: function (date) {
-                        d = date.format();
+                        d = date.format("YYYY-MM-DD");
                         $('#createEvent').show();
+                        $('#calendar').css("padding-top", "25px");
                         $('#EventName').val("");
                         $('#EventDescription').val("");
                         $('#EventStart').val(d);
@@ -92,24 +122,29 @@
 
                     editable: false,
 
+                    eventClick:  function(event, jsEvent, view) {
+                        $('#modalTitle').html(event.title);
+                        $('#startTime').html(moment(event.start).format('MMM Do h:mm A'));
+                        $('#endTime').html(moment(event.end).format('MMM Do h:mm A'));
+                        $('#description').html(event.brief);
+                        $('#calendarModal').modal();
+                        $("#currentEventID").val(event.id);
+                    },
+
                     events:$.map(data, function(item, i) {
                         var event = new Object();
                         event.start = moment(item.DateFrom);
                         event.end = moment(item.DateTo);
                         event.title = item.Name;
                         event.brief = item.Description;
-                        event.id = item.UserId;
+                        event.userid = item.UserId;
+                        event.id = item.EventId;
                         return event;
                     })
                 });
             }
         })
     }
-    /*
-    $(function () {
-        $("#date").datepicker();
-    });
-    */
 
     $(function () {
         $("#EventStartMinute").on("change", function () {
@@ -142,78 +177,110 @@
 <h1>@ViewBag.Message</h1>
 
 <!-- This is where the event creation forms will appear -->
+@using (Html.BeginForm("TranslateEventTime", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
 <div id="createEvent">
-    @using (Html.BeginForm("TranslateEventTime", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
-        <div class="form-group">
-            @Html.Label("Event Name:")
-            @Html.TextArea("EventName", new { @class = "form-control", id = "EventName" })
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.Label("Event Name:")
+                @Html.TextArea("EventName", new { @class = "form-control", id = "EventName" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Description:")
+                @Html.TextArea("EventDescription", new { @class = "form-control", id = "EventDescription" })
+            </div>
         </div>
-        <div class="form-group">
-            @Html.Label("Description:")
-            @Html.TextArea("EventDescription", new { @class = "form-control", id = "EventDescription" })
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.Label("Start Date:")
+                @Html.TextArea("EventStart", new { @class = "form-control", id = "EventStart" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Start Time:")
+                @Html.DropDownListFor(model => model.startHourVal, new SelectList(Model.hourList, "Value", "Text"), new { @class = "form-control", id = "EventStartHour" })
+                @Html.DropDownListFor(model => model.startMinuteVal, new SelectList(Model.minuteList, "Value", "Text"), new { @class = "form-control", id = "EventStartMinute" })
+                @Html.DropDownListFor(model => model.startTimeframeVal, new SelectList(Model.timeframeList, "Value", "Text"), new { @class = "form-control", id = "EventStartTimeframe" })
+                @Html.HiddenFor(model => model.startMinuteText)
+                @Html.HiddenFor(model => model.startTimeframeText)
+            </div>
         </div>
-        <div class="form-group">
-            @Html.Label("Start Date:")
-            @Html.TextArea("EventStart", new { @class = "form-control", id = "EventStart" })
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.Label("End Date:")
+                @Html.TextArea("EventEnd", new { @class = "form-control", id = "EventEnd" })
+            </div>
+            <div class="form-group">
+                @Html.Label("End Time:")
+                @Html.DropDownListFor(model => model.endHourVal, new SelectList(Model.hourList, "Value", "Text"), new { @class = "form-control", id = "EventEndHour" })
+                @Html.DropDownListFor(model => model.endMinuteVal, new SelectList(Model.minuteList, "Value", "Text"), new { @class = "form-control", id = "EventEndMinute" })
+                @Html.DropDownListFor(model => model.endTimeframeVal, new SelectList(Model.timeframeList, "Value", "Text"), new { @class = "form-control", id = "EventEndTimeframe" })
+                @Html.HiddenFor(model => model.endMinuteText)
+                @Html.HiddenFor(model => model.endTimeframeText)
+            </div>
         </div>
-
-        <div class="form-group">
-            @Html.Label("Start Time:")
-            @Html.DropDownListFor(model => model.startHourVal, new SelectList(Model.hourList, "Value", "Text"), new { @class = "form-control", id = "EventStartHour" })
-            @Html.DropDownListFor(model => model.startMinuteVal, new SelectList(Model.minuteList, "Value", "Text"), new { @class = "form-control", id = "EventStartMinute" })
-            @Html.DropDownListFor(model => model.startTimeframeVal, new SelectList(Model.timeframeList, "Value", "Text"), new { @class = "form-control", id = "EventStartTimeframe" })
-            @Html.HiddenFor(model => model.startMinuteText)
-            @Html.HiddenFor(model => model.startTimeframeText)
-        </div>
-
-        <div class="form-group">
-            @Html.Label("End Date:")
-            @Html.TextArea("EventEnd", new { @class = "form-control", id = "EventEnd" })
-        </div>
-        <div class="form-group">
-            @Html.Label("End Time:")
-            @Html.DropDownListFor(model => model.endHourVal, new SelectList(Model.hourList, "Value", "Text"), new { @class = "form-control", id = "EventEndHour" })
-            @Html.DropDownListFor(model => model.endMinuteVal, Model.minuteList, new { @class = "form-control", id = "EventEndMinute" })
-            @Html.DropDownListFor(model => model.endTimeframeVal, new SelectList(Model.timeframeList, "Value", "Text"), new { @class = "form-control", id = "EventEndTimeframe" })
-            @Html.HiddenFor(model => model.endMinuteText)
-            @Html.HiddenFor(model => model.endTimeframeText)
-        </div>
-       
+    </div>
+    <div class="row">
         <div class="form-group">
             <input id="createEventButton" type="submit" class="btn btn-primary" value="Create" />
         </div>
-
-    }
+    </div>
 </div>
-<div>
-    @using (Html.BeginForm("DownloadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
-    {
-        <div class="form-group">
-            <input type="submit" class="btn btn-success" value="Download" />
+}
+
+<div id="calendarModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+                <h4 id="modalTitle" class="modal-title"></h4>
+            </div>
+            <div id="modalBody" class="modal-body">
+                <b>Start: </b><span id="startTime"></span><br>
+                <b>End: </b><span id="endTime"></span><br>
+                <b>Description: </b><span id="description"></span><br>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("DeleteEvent", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+                    <div class="form-group">
+                        <input id="modalDelete" type="submit" class="btn btn-danger" value="Delete"/>
+                    </div>
+                    @Html.HiddenFor(model => model.currentEventID)
+                }
+                <button id="modalClose" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
-    }
-
-    @if(! ViewData.ModelState.IsValidField("Upload"))
-    {
-        <div class="alert alert-danger">
-            @ViewData.ModelState["Upload"].Errors[0]
-        </div>
-    }
-
-    
-    @using (Html.BeginForm("UploadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" }))
-    {
-        <div class="form-group">
-            <label for="file">Filename:</label>
-              <input class="form-control" type="file" name="file" id="file" />
-
-              <input class="btn btn-primary" type="submit" />
-        </div>
-    }
-
+    </div>
 </div>
+
 <!-- This is where the calendar will be displayed -->
 <div id='calendar'></div>
+
+<!-- This is where the calendar event uploading and downloading takes place. -->
+<div class="row">
+    <div class="col-md-2">
+        @using (Html.BeginForm("DownloadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+            <div class="form-group">
+                <input id="downloadEventButton" type="submit" class="btn btn-success" value="Download" />
+            </div>
+        }
+        @if (!ViewData.ModelState.IsValidField("Upload")) {
+            <div class="alert alert-danger">
+                @ViewData.ModelState["Upload"].Errors[0]
+            </div>
+        }
+    </div>
+        @using (Html.BeginForm("UploadEvents", "Calendar", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" })) {
+            <div class="form-group">
+                <div class="col-md-4">
+                    <label for="file" id="fileLabel">Filename:</label>
+                    <input class="form-control" type="file" name="file" id="file" />
+                </div>
+                <div class="col-md-4">
+                    <input id="uploadEventButton" class="btn btn-primary" type="submit" value="Upload"/>
+                </div>
+            </div>
+        }
+</div>
 
 
 

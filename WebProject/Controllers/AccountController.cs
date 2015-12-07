@@ -166,6 +166,7 @@ namespace WebApplication5.Controllers
         {
             Session.Abandon();
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            ChatController.LogOffUser(new ChatModel.ChatUser { ChatUserID = User.Identity.GetUserId(), Name = User.Identity.Name });
             return RedirectToAction("Index", "Home");
         }
 

@@ -1,0 +1,66 @@
+@{
+    ViewBag.Title = "GetNote";
+    //StockDescription.Stock StockNote = new StockDescription.Stock();
+}
+
+
+@model WebApplication5.Models.Stock
+
+        <div class="col-md-8">
+        @using (Html.BeginForm("GetNote", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+        {
+            <div class ="stockNote form-group" id="stockNote">
+                <div class="form-group">
+                    @Html.TextBox("stock", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Ticker" })
+                </div>
+                <div class="form-group">
+                    @Html.TextArea("note", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Note"})
+                </div>
+            
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Update" />
+                </div>
+            </div>
+        }
+    </div>
+
+<div id="Note">
+    @Model.Note
+</div>
+
+        <div class="col-md-8">
+        @using (Html.BeginForm("BuyStock", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+        {
+            <div class ="stockNote form-group" id="buyStock">
+                <div class="form-group" id="buyTicker">
+                    @Html.TextBox("stock", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Ticker" })
+                </div>
+                <div class="form-group" id="buyAction">
+                    @Html.TextBox("buy", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Purchase"})
+                </div>
+            
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Buy" />
+                </div>
+            </div>
+        }
+    </div>
+
+        <div class="col-md-8">
+        @using (Html.BeginForm("SellStock", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
+        {
+            <div class ="stockNote form-group" id="sellStock">
+                <div class="form-group" id="sellTicker">
+                    @Html.TextBox("stock", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Ticker" })
+                </div>
+                <div class="form-group" id="sellAction">
+                     @Html.TextBox("sell", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Sell"})
+                </div>
+            
+                <div class="form-group">
+                    <input type="submit" class="btn btn-primary" value="Sell" />
+                </div>
+            </div>
+        }
+    </div>
+

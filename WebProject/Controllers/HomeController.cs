@@ -6,6 +6,9 @@ using System.Web;
 using System.Web.Mvc;
 using WebApplication5.CustomAttributes;
 using WebApplication5.Models;
+using Microsoft.AspNet.Identity;
+using WebApplication5.App_Data;
+using System.Data.SqlClient;
 
 namespace WebApplication5.Controllers
 {
@@ -13,7 +16,8 @@ namespace WebApplication5.Controllers
     public class HomeController : Controller {
         public ActionResult Index() {
             //ViewBag.ReturnUrl = returnUrl;
-            UserPostsModels model = new UserPostsModels();
+            HomeModel model = new HomeModel();
+            UserPostsModels postsModel = new UserPostsModels();
             if (Session["access_token"] != null)
             {
                 var client = new FacebookClient(Session["access_token"].ToString());
@@ -41,16 +45,19 @@ namespace WebApplication5.Controllers
                             }
                         }
                     }
-                    model.posts = posts;
+                    postsModel.posts = posts;
                 }
                 catch (FacebookOAuthException e) { }
             }
+            List<EventModel> events = GetTodaysEvents();
+            model.Posts = postsModel;
+            model.Events = events;
 
             return View(model);
         }
 
         public ActionResult About() {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "About Our Application";
 
             return View();
         }
@@ -91,6 +98,48 @@ namespace WebApplication5.Controllers
             return RedirectToAction("Index");
         }
 
-    }
+        private List<EventModel> GetTodaysEvents()
+        {
+            List<EventModel> eventsOnToday = new List<EventModel>();
+            List<EventModel> usersEvents = QueryEvents();
 
+            foreach (EventModel anEvent in usersEvents)
+            {
+                if (Convert.ToDateTime(anEvent.DateFrom).Day.Equals(DateTime.Now.Day))
+                {
+                    eventsOnToday.Add(anEvent);
+                }
+            }
+
+            return eventsOnToday;
+        }
+
+        private List<EventModel> QueryEvents()
+        {
+            string userId = User.Identity.GetUserId();
+
+            List<EventModel> events = new List<EventModel>();
+            if (userId != null)
+            {
+                MySqlConnection conn = new MySqlConnection();
+                conn.CreateConn();
+                SqlCommand cmd = new SqlCommand("GetCalendarEvents", conn.Connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@UserId", userId));
+
+                conn.DataReader = cmd.ExecuteReader();
+                while (conn.DataReader.Read())
+                {
+                    string name = conn.DataReader["EventName"].ToString();
+                    string start = conn.DataReader["EventStartTime"].ToString();
+                    string end = conn.DataReader["EventEndTime"].ToString();
+                    string desc = conn.DataReader["EventDescription"].ToString();
+                    EventModel anEvent = new EventModel { Name = name, DateFrom = start, DateTo = end, Description = desc };
+                    events.Add(anEvent);
+                }
+            }
+
+            return events;
+        }
+	}
 }

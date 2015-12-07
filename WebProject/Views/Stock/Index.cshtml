@@ -1,6 +1,9 @@
 ﻿@{
     ViewBag.Title = "Stock";
+    WebApplication5.Models.Stock StockNote = new WebApplication5.Models.Stock();
 }
+
+@model WebApplication5.Models.Stock
 
 <style>
 #stockField{
@@ -39,26 +42,10 @@
         }
     </div>
 
-        <div class="col-md-8">
-        @using (Html.BeginForm("GetNote", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
-        {
-            <div class ="stockNote form-group" id="stockNote">
-                <div class="form-group">
-                    @Html.TextBox("stock", "", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Ticker" })
-                </div>
-                <div class="form-group">
-                    @Html.TextArea("note", new { @class = "form-control col-md-12", rows = 3, cols = 80, placeholder = "Stock Note"})
-                </div>
-            
-                <div class="form-group">
-                    <input type="submit" class="btn btn-primary" value="Update" />
-                </div>
-            </div>
-        }
-    </div>
 
 </div>
 
+@Html.Partial("GetNote", StockNote)
 
 <div class="stockInfo" id="stockInfo">
 </div>
@@ -107,8 +94,24 @@
             quoteData.length = 0; //clear old information
 
             $(function () {
+                var today = new Date();
+                var day = today.getDay()
+                var dd = today.getDate();
+                var mm = today.getMonth() + 1; //January is 0!
+                var yyyy = today.getFullYear();
+                if (day == 0) { dd = dd-2 }
+                if (day == 6) { dd = dd-1 }
 
-                var url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22" + symbol + "%22%20and%20startDate%20%3D%20%222015-01-01%22%20and%20endDate%20%3D%20%222015-10-10%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
+                if (dd < 10) {
+                    dd = '0' + dd
+                }
+
+                if (mm < 10) {
+                    mm = '0' + mm
+                }
+                today = yyyy + "-" + mm + "-" + dd;
+
+                var url = "https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.historicaldata%20where%20symbol%20%3D%20%22" + symbol + "%22%20and%20startDate%20%3D%20%222015-01-01%22%20and%20endDate%20%3D%20%22" + today + "%22&format=json&diagnostics=true&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=";
 
                 $.getJSON(url, function (data) {
 
