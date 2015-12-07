@@ -9,7 +9,7 @@ function LoginOnFailure(result) {
 
 //called every 5 seconds
 function Refresh() {
-    var href = "/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
+    var href = "R2/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
 
     //call the Index method of the controller
     $("a#ActionLink").attr("href", href);
