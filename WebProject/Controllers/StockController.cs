@@ -94,7 +94,7 @@ namespace WebApplication5.Controllers
                 SqlCommand cmd = new SqlCommand("CreateStockTransaction", conn.Connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@UserId", userId));
-                cmd.Parameters.Add(new SqlParameter("@StockName", stock));
+                cmd.Parameters.Add(new SqlParameter("@StockName", stock.ToUpper()));
                 cmd.Parameters.Add(new SqlParameter("@Quantity", numTrans));
                 cmd.Parameters.Add(new SqlParameter("@TransactionPrice", transPrice));
                 cmd.Parameters.Add(new SqlParameter("@HasSold", transactionType));
@@ -132,7 +132,7 @@ namespace WebApplication5.Controllers
                 SqlCommand cmd = new SqlCommand("CreateStockTransaction", conn.Connection);
                 cmd.CommandType = System.Data.CommandType.StoredProcedure;
                 cmd.Parameters.Add(new SqlParameter("@UserId", userId));
-                cmd.Parameters.Add(new SqlParameter("@StockName", stock));
+                cmd.Parameters.Add(new SqlParameter("@StockName", stock.ToUpper()));
                 cmd.Parameters.Add(new SqlParameter("@Quantity", numTrans));
                 cmd.Parameters.Add(new SqlParameter("@TransactionPrice", transPrice));
                 cmd.Parameters.Add(new SqlParameter("@HasSold", transactionType));

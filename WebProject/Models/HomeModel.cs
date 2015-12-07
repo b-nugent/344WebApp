@@ -11,5 +11,7 @@ namespace WebApplication5.Models
 
         public List<EventModel> Events { get; set; }
 
+        public List<Stock> Top5 { get; set; }
+
     }
 }
