@@ -2,6 +2,7 @@
 @model WebApplication5.Models.HomeModel
 @{
     ViewBag.Title = "Home Page";
+    var length = Model.Top5.Count;
 }
 
 
@@ -133,13 +134,27 @@
                     <div class="col-md-3"><b>Shares</b></div>
                     <div class="col-md-3"><b>Profit</b></div>
                 </div>
-                <div class="row">
-                    @foreach (var stock in @Model.Top5) {
-                        <div class="col-md-3">@stock.Symbol</div>
-                        <div class="col-md-3">@stock.NumShares</div>
-                        <div class="col-md-3">@stock.SoldPrice</div>
+                    @if (length < 5){
+                    for (var i=0; i < length; i++ )
+                    {
+                        <div class="row">
+                        <div class="col-md-3">@Model.Top5[i].Symbol</div>
+                        <div class="col-md-3">@Model.Top5[i].NumShares</div>
+                        <div class="col-md-3">@Model.Top5[i].SoldPrice</div>
+                        </div>
                     }
-                </div>
+                    }
+
+                    @if (length > 5){
+                    for (var i=0; i < 5; i++ )
+                    {
+                        <div class="row">
+                        <div class="col-md-3">@Model.Top5[i].Symbol</div>
+                        <div class="col-md-3">@Model.Top5[i].NumShares</div>
+                        <div class="col-md-3">@Model.Top5[i].SoldPrice</div>
+                        </div>
+                    }
+                    }
             </div>
             <div id="userStatus" class="col-md-6" style="">
                 @{
