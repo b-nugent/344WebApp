@@ -47,7 +47,7 @@ namespace WebApplication5
                         "~/Scripts/Chat.js",
                         "~/Scripts/jquery.validate.unobtrusive.js",
                         "~/Scripts/GoogleAnalytics.js",
-                        "~/Scripts/Highcharts.js"));
+                        "~/Scripts/highstock.js"));
         }
     }
 }
