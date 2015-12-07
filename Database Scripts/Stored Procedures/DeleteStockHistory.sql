@@ -20,3 +20,4 @@ BEGIN
     FROM dbo.StockTransactions 
     WHERE ((UserID = @UserId));
 END
+GO

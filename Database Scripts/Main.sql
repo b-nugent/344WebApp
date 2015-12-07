@@ -10,3 +10,6 @@
 :r "C:\Users\Pop\Documents\Visual Studio 2012\Projects\344WebApp\Database Scripts\\Stored Procedures\DeleteCalendarEvent.sql"
 :r "C:\Users\Pop\Documents\Visual Studio 2012\Projects\344WebApp\Database Scripts\\Stored Procedures\GetStockTransactions.sql"
 :r "C:\Users\Pop\Documents\Visual Studio 2012\Projects\344WebApp\Database Scripts\\Stored Procedures\ReturnStockNote.sql"
+:r "C:\Users\Pop\Documents\Visual Studio 2012\Projects\344WebApp\Database Scripts\\Stored Procedures\DeleteStockHistory.sql"
+:r "C:\Users\Pop\Documents\Visual Studio 2012\Projects\344WebApp\Database Scripts\\Stored Procedures\GetStockhistory.sql"
+:r "C:\Users\Pop\Documents\Visual Studio 2012\Projects\344WebApp\Database Scripts\\Stored Procedures\GetUniqueStocks.sql"

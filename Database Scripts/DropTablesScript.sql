@@ -16,3 +16,6 @@ DROP PROC dbo.CreateStockTransaction;
 DROP PROC dbo.DeleteCalendarEvent;
 DROP PROC dbo.GetStockTransaction;
 DROP PROC dbo.GetStockNote;
+DROP PROC dbo.DeleteStockHistory;
+DROP PROC dbo.GetStockHistory;
+DROP PROC dbo.GetUniqueStocks;
