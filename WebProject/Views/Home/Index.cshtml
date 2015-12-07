@@ -32,7 +32,6 @@
         text-align: center; 
     }
 
-
     #userStocks {
         display: inline-block;
         float: left;
@@ -41,7 +40,7 @@
         border-width: 2px;
         border-radius: 5px;
         margin: 15px;
-        padding: 20px 20px 0 20px;
+        padding: 0px 20px 0 20px;
     }
 
     #userChat {
@@ -63,6 +62,7 @@
         border-width: 2px;
         border-radius: 5px;
         margin: 15px;
+        margin-bottom: 0px;
         padding: 20px 20px 0 20px;
     }
     
@@ -74,6 +74,7 @@
         border-width: 2px;
         border-radius: 5px;
         margin: 15px;
+        padding: 0 20px 20px 20px;
     }
 
    #userStatus {
@@ -112,31 +113,25 @@
                 <div id="stockInfo"></div>
             </div>
             <div id="userTop5" class="col-md-6">
-               <h1>Stock History</h1>
-               <table>
-                   <thead>
-                       <tr>
-                           <th>Stock Ticker</th>
-                           <th>Shares Owned</th>
-                           <th>Money Made</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                       @foreach (var stock in @Model.Top5) {
-                        <tr>
-                           <td>@stock.Symbol</td>
-                               <td>@stock.NumShares</td>
-                               <td>@stock.SoldPrice</td>
-                        </tr>
-                       }
-                   </tbody>
-               </table>
+               <h2>Stock History</h2>
+               <div class="row">
+                    <div class="col-md-3"><b>Stock</b></div>
+                    <div class="col-md-3"><b>Shares</b></div>
+                    <div class="col-md-3"><b>Profit</b></div>
+                </div>
+                <div class="row">
+                    @foreach (var stock in @Model.Top5) {
+                        <div class="col-md-3">@stock.Symbol</div>
+                        <div class="col-md-3">@stock.NumShares</div>
+                        <div class="col-md-3">@stock.SoldPrice</div>
+                    }
+                </div>
             </div>
         </div>
         <div class="row">
             <div id="userChat" class="col-md-6">
                 @{
-           if (User.Identity.GetUserId() != null) {
+                    if (User.Identity.GetUserId() != null) {
                         <div id="YourNickname" style="display:none">
                         </div>
                         <div id="LastRefresh">
@@ -147,35 +142,35 @@
                         <div id="Error">
                         </div>
                         @Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
-           }
+                    }
                 }
             </div>
             <div id="userStatus" class="col-md-6" style="">
                 @{
-           if (Model.Posts.posts != null) {
+                    if (Model.Posts.posts != null) {
                         <h2>Update Facebook Status</h2>
-               using (Html.BeginForm("UpdateStatus", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
+                        using (Html.BeginForm("UpdateStatus", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
                             <div class="form-group">
                                 @Html.TextArea("status", new { @class = "form-control col-md-12", rows = 3, cols = 80 })
                             </div>
                             <div class="form-group">
                                 <input type="submit" class="btn btn-primary" value="Update" />
                             </div>
-               }
-           }
+                        }
+                    }
                 }
             </div> 
         </div>
         <div class="row">
             <div id="userCalendar" class="dailyEvents col-md-6">
                 @{
-           if (Model.Events.Count == 0) {
+                    if (Model.Events.Count == 0) {
                         <div class="alert alert-info">
                             No events planned for today...
                         </div>
-           } else {
+                    } else {
                         <h2>Today's Events</h2>
-               foreach (var anEvent in Model.Events) {
+                        foreach (var anEvent in Model.Events) {
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -194,8 +189,8 @@
                                 </div>
                             </div>
                             <hr />
-               }
-           }   
+                        }
+                    }   
                 }
             </div>   
             <div id="userPosts" class="col-md-6" style="">
