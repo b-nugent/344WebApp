@@ -69,6 +69,28 @@ namespace WebApplication5.Controllers
             return View(StockNote);
         }
 
+        public ActionResult DeleteStockNote(string stockName)
+        {
+            string userId = User.Identity.GetUserId();
+
+            if (userId != null)
+            {
+                MySqlConnection conn = new MySqlConnection();
+                conn.CreateConn();
+                SqlCommand cmd = new SqlCommand("DeleteStockNote", conn.Connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@UserId", userId));
+                cmd.Parameters.Add(new SqlParameter("@StockName", stockName));
+
+
+                conn.Command = cmd;
+                conn.Command.Prepare();
+                conn.Command.ExecuteNonQuery();
+
+            }
+            return RedirectToAction("index");
+        }
+
         public ActionResult BuyStock(string stock, string buy)
         {
             string userId = User.Identity.GetUserId();

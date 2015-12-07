@@ -19,3 +19,4 @@ DROP PROC dbo.GetStockNote;
 DROP PROC dbo.DeleteStockHistory;
 DROP PROC dbo.GetStockHistory;
 DROP PROC dbo.GetUniqueStocks;
+DROP PROC dbo.DeleteStockNote;

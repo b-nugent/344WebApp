@@ -175,6 +175,7 @@ namespace WebApplication5.Controllers
 
                 try
                 {
+                    DeleteStockHistory();
                     Dictionary<string, List<Stock>> stocks = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, List<Stock>>>(json);
                     foreach (string key in stocks.Keys)
                     {
