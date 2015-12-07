@@ -206,11 +206,7 @@ namespace WebApplication5.Controllers
                 Dictionary<string, List<Stock>> history = GetStockHistoryForDownload(userId);
                 foreach (string key in history.Keys)
                 {
-                    foreach (Stock stockValues in history[key])
-                    {
-                        TransactionList.Add(stockValues);
-                    }
-                    Top5.Add(calculateEarned(TransactionList));
+                    Top5.Add(calculateEarned(history[key]));
                 }
                 Top5 = sortTop5(Top5);
             }
@@ -220,7 +216,7 @@ namespace WebApplication5.Controllers
         public Stock calculateEarned(List<Stock> transactions)
         {
             Stock finalStock = new Stock();
-            finalStock.Symbol = transactions[0].Symbol;
+            finalStock.NumShares = 0;
             foreach (Stock s in transactions)
             {
                 if (s.SoldPrice == 0)
@@ -233,6 +229,7 @@ namespace WebApplication5.Controllers
                     finalStock.SoldPrice += (s.SoldPrice * s.NumShares);
                     finalStock.NumShares -= s.NumShares;
                 }
+                finalStock.Symbol = s.Symbol;
             }
             return finalStock;
         }
