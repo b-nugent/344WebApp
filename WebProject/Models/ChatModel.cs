@@ -35,6 +35,7 @@ namespace WebApplication5.Models
             public string Name;
             public DateTime LoggedOnTime;
             public DateTime LastPing;
+            public List<ChatMessage> ChatHistory = new List<ChatMessage>();
         }
 
         public class ChatMessage

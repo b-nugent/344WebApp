@@ -29,23 +29,27 @@ public class ChatController : Controller
             try
             {
                 if (chatModel == null) chatModel = new ChatModel();
-
+                ChatModel.ChatUser currentUser = chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId());
                 if (logOn != null && (bool)logOn)
                 {
                     return CheckLoggedInUser(UserID, chatModel);
                 }
+
                 else if (logOff != null && (bool)logOff)
                 {
                     LogOffUser(chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId()));
-                    return PartialView("Lobby", chatModel);
+                    ChatViewModel chatViewModel = new ChatViewModel();
+                    chatViewModel.Users = chatModel.Users;
+                    chatViewModel.ChatHistory = currentUser.ChatHistory;
+                    return PartialView("Lobby", chatViewModel);
                 }
                 else
                 {
-                    ChatModel.ChatUser currentUser = chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId());
+                    
 
                     //remember each user's last ping time
                     currentUser.LastPing = DateTime.Now;
-
+                    
                     #region remove inactive users
                     RemoveInactiveUsers(chatModel);
                     #endregion
@@ -56,8 +60,10 @@ public class ChatController : Controller
                         AddMessage(UserID, chatMessage, chatModel);
                     }
                     #endregion
-
-                    return PartialView("ChatHistory", chatModel);
+                    ChatViewModel chatViewModel = new ChatViewModel();
+                    chatViewModel.Users = chatModel.Users;
+                    chatViewModel.ChatHistory = currentUser.ChatHistory;
+                    return PartialView("ChatHistory", chatViewModel);
                 }
             }
             catch (Exception ex)
@@ -99,17 +105,18 @@ public class ChatController : Controller
 
     private ActionResult CheckLoggedInUser(string UserID, ChatModel chatModel)
     {
-        //check if nickname already exists
         if (chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId()) == null)
         {
             #region create new user and add to lobby
-            chatModel.Users.Add(new ChatModel.ChatUser()
+            
+                ChatModel.ChatUser currentUser = new ChatModel.ChatUser()
             {
                 ChatUserID = UserID,
                 Name = User.Identity.GetUserName(),
                 LoggedOnTime = DateTime.Now,
                 LastPing = DateTime.Now
-            });
+            };
+                chatModel.Users.Add(currentUser);
 
             //stored procedure select 
             MySqlConnection selectConn = new MySqlConnection();
@@ -121,17 +128,19 @@ public class ChatController : Controller
             selectConn.DataReader = command.ExecuteReader();
             while (selectConn.DataReader.Read())
             {
-                chatModel.ChatHistory.Add(new ChatModel.ChatMessage
+                currentUser.ChatHistory.Add(new ChatModel.ChatMessage
                 {
-
                     Message = selectConn.DataReader["MessageContent"].ToString(),
                     Username = selectConn.DataReader["UserName"].ToString()
                 });
             }
             #endregion
         }
-
-        return PartialView("Lobby", chatModel);
+        ChatModel.ChatUser curUser = chatModel.Users.FirstOrDefault(u => u.ChatUserID == User.Identity.GetUserId());
+        ChatViewModel chatViewModel = new ChatViewModel();
+        chatViewModel.Users = chatModel.Users;
+        chatViewModel.ChatHistory = curUser.ChatHistory;
+        return PartialView("Lobby", chatViewModel);
     }
 
     private void RemoveInactiveUsers(ChatModel chatModel)
@@ -176,10 +185,11 @@ public class ChatController : Controller
                 conn.Command = cmd2;
                 conn.Command.Prepare();
                 conn.Command.ExecuteNonQuery();
+                usr.ChatHistory.Add(new ChatModel.ChatMessage { Message = chatMessage, Username = User.Identity.Name });
 
             }
             conn.CloseConn();
-            chatModel.ChatHistory.Add(new ChatModel.ChatMessage { Message = chatMessage, Username = User.Identity.Name });
+            
         }
     }
 }
