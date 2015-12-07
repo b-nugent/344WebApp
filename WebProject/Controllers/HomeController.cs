@@ -53,6 +53,9 @@ namespace WebApplication5.Controllers
             model.Posts = postsModel;
             model.Events = events;
 
+            List<Stock> Top5 = Top5Stocks();
+            model.Top5 = Top5;
+
             return View(model);
         }
 
@@ -140,6 +143,114 @@ namespace WebApplication5.Controllers
             }
 
             return events;
+        }
+
+
+        public Dictionary<string, List<Stock>> GetStockHistoryForDownload(string userId)
+        {
+            Dictionary<string, List<Stock>> dict = new Dictionary<string, List<Stock>>();
+
+            if (userId != null)
+            {
+                MySqlConnection conn = new MySqlConnection();
+                conn.CreateConn();
+                SqlCommand cmd = new SqlCommand("GetStockHistory", conn.Connection);
+                cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                cmd.Parameters.Add(new SqlParameter("@UserId", userId));
+
+                conn.DataReader = cmd.ExecuteReader();
+                while (conn.DataReader.Read())
+                {
+                    Stock userStock = new Stock();
+                    string sname = conn.DataReader["StockName"].ToString();
+                    int quantity = Convert.ToInt16(conn.DataReader["Quantity"]);
+                    decimal price = Convert.ToDecimal(conn.DataReader["TransactionPrice"]);
+                    int hasSold = Convert.ToInt16(conn.DataReader["HasSold"]);
+
+                    if (hasSold == 1)
+                    {
+                        userStock.SoldPrice = price;
+                        userStock.BoughtPrice = 0;
+                    }
+
+                    else
+                    {
+                        userStock.BoughtPrice = price;
+                        userStock.SoldPrice = 0;
+                    }
+                    userStock.Symbol = sname;
+                    userStock.NumShares = quantity;
+                    if (dict.ContainsKey(sname))
+                    {
+                        dict[sname].Add(userStock);
+                    }
+                    else
+                    {
+                        List<Stock> userTransactions = new List<Stock>();
+                        userTransactions.Add(userStock);
+                        dict.Add(sname, userTransactions);
+                    }
+
+                }
+            }
+
+            return dict;
+        }
+        public List<Stock> Top5Stocks()
+        {
+            List<Stock> Top5 = new List<Stock>();
+            List<Stock> TransactionList = new List<Stock>();
+            string userId = User.Identity.GetUserId();
+            if (userId != null)
+            {
+                Dictionary<string, List<Stock>> history = GetStockHistoryForDownload(userId);
+                foreach (string key in history.Keys)
+                {
+                    foreach (Stock stockValues in history[key])
+                    {
+                        TransactionList.Add(stockValues);
+                    }
+                    Top5.Add(calculateEarned(TransactionList));
+                }
+                Top5 = sortTop5(Top5);
+            }
+            return Top5;
+        }
+
+        public Stock calculateEarned(List<Stock> transactions)
+        {
+            Stock finalStock = new Stock();
+            finalStock.Symbol = transactions[0].Symbol;
+            foreach (Stock s in transactions)
+            {
+                if (s.SoldPrice == 0)
+                {
+                    finalStock.SoldPrice -= s.BoughtPrice * s.NumShares;
+                    finalStock.NumShares += s.NumShares;
+                }
+                if (s.BoughtPrice == 0)
+                {
+                    finalStock.SoldPrice += (s.SoldPrice * s.NumShares);
+                    finalStock.NumShares -= s.NumShares;
+                }
+            }
+            return finalStock;
+        }
+
+        public List<Stock> sortTop5(List<Stock> currTop5)
+        {
+           // List<Stock> sortedTop5 = new List<Stock>();
+            //Stock prevStock = new Stock();
+            /*foreach (Stock currentStock in currTop5)
+            {
+                if (currentStock.SoldPrice > prevStock.SoldPrice)
+                {
+                    sortedTop5[
+                }
+                prevStock = currentStock;
+            }*/
+            List<Stock> SortedList = currTop5.OrderBy(o => o.SoldPrice).ToList();
+            return SortedList;
         }
 	}
 }
