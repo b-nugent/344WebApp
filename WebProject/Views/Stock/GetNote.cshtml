@@ -64,27 +64,3 @@
         }
     </div>
 
-    <div class="col-md-2">
-        @using (Html.BeginForm("DownloadStocks", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
-            <div class="form-group">
-                <input id="downloadStockButton" type="submit" class="btn btn-success" value="Download" />
-            </div>
-        }
-        @if (!ViewData.ModelState.IsValidField("Upload")) {
-            <div class="alert alert-danger">
-                @ViewData.ModelState["Upload"].Errors[0]
-            </div>
-        }
-    </div>
-
-        @using (Html.BeginForm("UploadStocks", "Stock", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", enctype = "multipart/form-data" })) {
-            <div class="form-group">
-                <div class="col-md-4">
-                    <label for="file" id="fileLabel">Filename:</label>
-                    <input class="form-control" type="file" name="file" id="file" />
-                </div>
-                <div class="col-md-4">
-                    <input id="uploadEventButton" class="btn btn-primary" type="submit" value="Upload"/>
-                </div>
-            </div>
-        }

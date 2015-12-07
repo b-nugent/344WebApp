@@ -181,6 +181,7 @@
     <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\CalendarController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\StockHistoryController.cs" />
     <Compile Include="CustomAttributes\LogInAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -190,6 +191,7 @@
     <Compile Include="Models\ChatModel.cs" />
     <Compile Include="Models\EventModel.cs" />
     <Compile Include="Models\HomeModel.cs" />
+    <Compile Include="Models\StockHistoryModel.cs" />
     <Compile Include="Models\UserPostsModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -289,6 +291,7 @@
     <Content Include="Views\Chat\ChatHistory.cshtml" />
     <Content Include="Views\Chat\Index.cshtml" />
     <Content Include="Views\Stock\GetNote.cshtml" />
+    <Content Include="Views\StockHistory\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
