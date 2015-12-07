@@ -20,8 +20,7 @@ GO
 -- =============================================
 CREATE PROCEDURE [dbo].[GetStockNote]
 	@UserId nvarchar(128), 
-	@StockName nvarchar(4), 
-	@StockNote nvarchar(300)
+	@StockName nvarchar(4)
 AS
 BEGIN
 	SET NOCOUNT ON;
