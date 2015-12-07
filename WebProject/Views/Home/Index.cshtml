@@ -39,15 +39,15 @@
         text-align: center; 
     }
 
-    #topstocks { 
-        width: 100%; 
+    #userStocks { 
+        width: 97%; 
         border: solid #00b7e6;
         border-width: 2px;
         border-radius: 5px;
-        padding: 10px 15px 10px 15px; 
+        padding: 0 15px 10px 15px; 
         height: auto; 
         overflow: auto; 
-        margin: 30px 0 30px 0;
+        margin: 30px 15px 30px 15px;
     }
 
     #userChat {
@@ -92,14 +92,6 @@
         margin: 15px;
     }
 </style>
-
-<div class="row">
-    <div class="stockcontainer col-md-12">
-        <h2>Top 5 Stocks</h2>
-        <div id="topstocks">
-        </div>
-    </div>
-</div>
 @{
     if(Model.Posts.posts == null) {
         <div class="row">
@@ -111,9 +103,15 @@
         </div>
     } else {
         <div class="row">
+            <div id="userStocks" class="col-md-12">
+                <h2>Top 5 Stocks</h2>
+                <div id="stockInfo"></div>
+            </div>
+        </div>
+        <div class="row">
             <div id="userChat" class="col-md-6">
                 @{
-                    if (User.Identity.GetUserId() != null) {
+        if (User.Identity.GetUserId() != null) {
                         <div id="YourNickname" style="display:none">
                         </div>
                         <div id="LastRefresh">
@@ -124,24 +122,22 @@
                         <div id="Error">
                         </div>
                         @Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
-                    }
+        }
                 }
             </div>
             <div id="userStatus" class="col-md-6" style="">
                 @{
-                    if (Model.Posts.posts != null)
-                    {
+        if (Model.Posts.posts != null) {
                         <h2>Update Facebook Status</h2>
-                        using (Html.BeginForm("UpdateStatus", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" }))
-                        {
+            using (Html.BeginForm("UpdateStatus", "Home", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Get, new { role = "form" })) {
                             <div class="form-group">
                                 @Html.TextArea("status", new { @class = "form-control col-md-12", rows = 3, cols = 80 })
                             </div>
                             <div class="form-group">
                                 <input type="submit" class="btn btn-primary" value="Update" />
                             </div>
-                        }
-                    }
+            }
+        }
                 }
             </div> 
         </div>
@@ -149,15 +145,13 @@
         <div class="row">
             <div id="userCalendar" class="dailyEvents col-md-6">
                 @{
-                    if (Model.Events.Count == 0)
-                    {
+        if (Model.Events.Count == 0) {
                         <div class="alert alert-info">
                             No events planned for today...
                         </div>
-                    } else {
+        } else {
                         <h2>Today's Events</h2>
-                        foreach (var anEvent in Model.Events)
-                        {
+            foreach (var anEvent in Model.Events) {
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-12">
@@ -176,14 +170,13 @@
                                 </div>
                             </div>
                             <hr />
-                        }
-                    }   
+            }
+        }   
                 }
             </div>   
             <div id="userPosts" class="col-md-6" style="">
                 <h2>Recent Facebook Posts</h2>
-                @foreach (var post in Model.Posts.posts)
-                {
+                @foreach (var post in Model.Posts.posts) {
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-md-12">
@@ -210,7 +203,7 @@
         for (var i = 0; i < num_items; i++) {
             output += '<h5>' + items[i].symbol + ' ' + items[i].Name + ' ' + items[i].LastTradePriceOnly + ' ' + items[i].Change + '%' + '</h5>';
         }
-        $('#topstocks').html(output);
+        $("#stockInfo").html(output);
     }
 </script>
 <script src='https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20yahoo.finance.quotes%20where%20symbol%20in%20(%22YHOO%22%2C%20%22MSFT%22%2C%20%22GOOG%22%2C%20%22AAPL%22%2C%20%22XOM%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys&callback=cback'></script>
