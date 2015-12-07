@@ -1,4 +1,5 @@
-﻿@{
+﻿@using Microsoft.AspNet.Identity;
+@{
     ViewBag.Title = "Stock";
     WebApplication5.Models.Stock StockNote = new WebApplication5.Models.Stock();
 }
@@ -76,6 +77,8 @@
 <div class="row">
     <div id="stockChart" class="col-md-12" style="height: 400px; min-width: 310px"></div>
 </div>
+@{
+if(User.Identity.GetUserId() != null) {
 <div class="row">
     <div id="stockNote" class="col-md-6 afterSearch">
         <h2>Stock Note</h2>
@@ -99,7 +102,8 @@
         @Html.Partial("GetNote", StockNote)
     </div>
 </div>
-
+}
+}
 
 
 @Ajax.ActionLink("Login", "Index", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "stockChart", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
