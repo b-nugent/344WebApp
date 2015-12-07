@@ -93,7 +93,6 @@ public class ChatController : Controller
                 }
             }
             chatModel.Users.Remove(userToRemove);
-            chatModel = new ChatModel();
         }
        
     }
@@ -113,24 +112,20 @@ public class ChatController : Controller
             });
 
             //stored procedure select 
-
             MySqlConnection selectConn = new MySqlConnection();
             selectConn.CreateConn();
             SqlCommand command = new SqlCommand("GetChatMessages", selectConn.Connection);
             command.CommandType = System.Data.CommandType.StoredProcedure;
             command.Parameters.Add(new SqlParameter("@UserID", UserID));
 
-            SqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
+            selectConn.DataReader = command.ExecuteReader();
+            while (selectConn.DataReader.Read())
             {
-                ChatModel.ChatUser msgSender;
-                string username = reader.GetString(reader.GetOrdinal("UserID"));
-                msgSender = chatModel.Users.FirstOrDefault(u => u.ChatUserID == username);
                 chatModel.ChatHistory.Add(new ChatModel.ChatMessage
                 {
 
-                    Message = reader.GetString(reader.GetOrdinal("MessageContent")),
-                    Username = msgSender.Name
+                    Message = selectConn.DataReader["MessageContent"].ToString(),
+                    Username = selectConn.DataReader["UserName"].ToString()
                 });
             }
             #endregion

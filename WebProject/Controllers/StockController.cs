@@ -188,8 +188,6 @@ namespace WebApplication5.Controllers
             catch (FormatException){
                 return 0;
             }
-            
-
         }
 
         public Dictionary<string,List<List<decimal>>> GetTransactionHistory(string stock, string userId)

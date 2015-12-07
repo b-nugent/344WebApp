@@ -241,6 +241,8 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\Chat.js" />
     <Content Include="Scripts\fullcalendar.js" />
+    <Content Include="Scripts\GoogleAnalytics.js" />
+    <Content Include="Scripts\highstock.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />

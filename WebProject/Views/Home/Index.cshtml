@@ -4,17 +4,7 @@
     ViewBag.Title = "Home Page";
 }
 
-@section JavaScript{
-    @Styles.Render("~/bundles/core")
-    <!--<script src='/Scripts/jquery.min.js'></script>
 
-    <script src="/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <script src="/Scripts/jquery-ui-1.8.20.js"></script>
-    <script src="/Scripts/jquery.validate.js"></script>
-    <script src="/Scripts/Chat.js"></script>
-    <script src="/Scripts/jquery.validate.unobtrusive.js"></script>
-    <script src="/Scripts/GoogleAnalytics.js"></script>-->
-}
 <style type="text/css">
     .box {
         margin: 10px;
@@ -111,7 +101,7 @@
         <div class="row">
             <div id="userChat" class="col-md-6">
                 @{
-        if (User.Identity.GetUserId() != null) {
+                    if (User.Identity.GetUserId() != null) {
                         <div id="YourNickname" style="display:none">
                         </div>
                         <div id="LastRefresh">
@@ -121,8 +111,8 @@
                         </div>
                         <div id="Error">
                         </div>
-                        @Ajax.ActionLink("Login", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
-        }
+                        @Ajax.ActionLink("Index", "Index", "Chat", new { thisUserLoggedOn = "" }, new AjaxOptions { UpdateTargetId = "container", OnFailure = "LoginOnFailure", OnSuccess = "LoginOnSuccess" }, new { @id = "LoginButton", @style = "visibility:hidden;" })
+                    }
                 }
             </div>
             <div id="userStatus" class="col-md-6" style="">
@@ -196,6 +186,64 @@
     }
 }
 <script type='text/javascript'>
+    $(document).ready(function () {
+
+        var href = "/Chat/Index?";
+        href = href + "&logOn=true";
+        $("#LoginButton").attr("href", href)
+        $("a#LoginButton")[0].click();
+
+    });
+
+    //the login was successful. Setup events for the lobby and prepare other UI items
+    function LoginOnSuccess(result) {
+
+        ScrollChat();
+        ShowLastRefresh();
+
+        $("#txtSpeak").val('').focus();
+
+        //the chat state is fetched from the server every 5 seconds (ping)
+        setTimeout("Refresh();", 5000);
+
+        //auto post when enter is pressed
+        $('#txtSpeak').keydown(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                $("#btnSpeak").click();
+            }
+        });
+
+        //setup the event for the "Speak" button that is rendered in the partial view 
+        $("#btnSpeak").click(function () {
+            var text = $("#txtSpeak").val();
+            if (text) {
+
+                //call the Index method of the controller and pass the attribute "chatMessage"
+                var href = "/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
+                href = href + "&chatMessage=" + encodeURIComponent(text);
+                $("a#ActionLink").attr("href", href);
+                $("a#ActionLink")[0].click();
+
+                $("#txtSpeak").val('').focus();
+            }
+        });
+
+
+        //setup the event for the "Speak" button that is rendered in the partial view 
+        $("#btnLogOff").click(function () {
+
+            //call the Index method of the controller and pass the attribute "logOff"
+            var href = "/?user=" + encodeURIComponent($("#YourNickname").text());
+            href = href + "&logOff=true";
+            $("a#ActionLink").attr("href", href);
+            $("a#ActionLink")[0].click();
+
+            document.location.href = "/";
+        });
+
+    }
+
     function cback(o) {
         var items = o.query.results.quote;
         var output = '';

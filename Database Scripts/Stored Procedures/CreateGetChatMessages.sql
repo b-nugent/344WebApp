@@ -32,8 +32,8 @@ BEGIN
 	SET NOCOUNT ON;
 
     -- Insert statements for procedure here
-	SELECT H.MessageContent, H.UserID
-	FROM dbo.ChatHistory H, dbo.UserChatHistory U
-	WHERE (U.ReceivedUserID = @UserID) AND (H.MessageID = U.MessageID);
+	SELECT H.MessageContent, NU.UserName
+	FROM dbo.ChatHistory H, dbo.UserChatHistory U, dbo.AspNetUsers NU
+	WHERE (U.ReceivedUserID = @UserID) AND (H.MessageID = U.MessageID) AND (H.UserID = NU.Id);
 END
 GO

@@ -1,57 +1,4 @@
-﻿$(document).ready(function () {
-
-    var href = "/Chat/Index?";
-    href = href + "&logOn=true";
-    $("#LoginButton").attr("href", href).click();
-
-});
-
-//the login was successful. Setup events for the lobby and prepare other UI items
-function LoginOnSuccess(result) {
-
-    ScrollChat();
-    ShowLastRefresh();
-
-    $("#txtSpeak").val('').focus();
-
-    //the chat state is fetched from the server every 5 seconds (ping)
-    setTimeout("Refresh();", 5000);
-
-    //auto post when enter is pressed
-    $('#txtSpeak').keydown(function (e) {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            $("#btnSpeak").click();
-        }
-    });
-
-    //setup the event for the "Speak" button that is rendered in the partial view 
-    $("#btnSpeak").click(function () {
-        var text = $("#txtSpeak").val();
-        if (text) {
-
-            //call the Index method of the controller and pass the attribute "chatMessage"
-            var href = "/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
-            href = href + "&chatMessage=" + encodeURIComponent(text);
-            $("#ActionLink").attr("href", href).click();
-
-            $("#txtSpeak").val('').focus();
-        }
-    });
-
-
-    //setup the event for the "Speak" button that is rendered in the partial view 
-    $("#btnLogOff").click(function () {
-
-        //call the Index method of the controller and pass the attribute "logOff"
-        var href = "/?user=" + encodeURIComponent($("#YourNickname").text());
-        href = href + "&logOff=true";
-        $("#ActionLink").attr("href", href).click();
-
-        document.location.href = "/";
-    });
-
-}
+﻿
 
 //briefly show login error message
 function LoginOnFailure(result) {
@@ -65,7 +12,8 @@ function Refresh() {
     var href = "/Chat/Index?user=" + encodeURIComponent($("#YourNickname").text());
 
     //call the Index method of the controller
-    $("#ActionLink").attr("href", href).click();
+    $("a#ActionLink").attr("href", href);
+    $("a#ActionLink")[0].click();
     setTimeout("Refresh();", 5000);
 }
 
