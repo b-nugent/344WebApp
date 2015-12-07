@@ -87,7 +87,7 @@ namespace WebApplication5.Controllers
                 numTrans = Convert.ToInt16(buy);
             }
 
-            if (userId != null)
+            if (userId != null & numTrans > 0)
             {
                 MySqlConnection conn = new MySqlConnection();
                 conn.CreateConn();
@@ -125,7 +125,7 @@ namespace WebApplication5.Controllers
                 transPrice = QueryStockPrice(stock);
             }
 
-            if (userId != null & checkIfStocksExist(stock, userId, numTrans))
+            if (userId != null & checkIfStocksExist(stock, userId, numTrans) & numTrans > 0)
             {
                 MySqlConnection conn = new MySqlConnection();
                 conn.CreateConn();
